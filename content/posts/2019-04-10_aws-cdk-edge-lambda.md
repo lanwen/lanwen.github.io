@@ -50,7 +50,7 @@ const CERTIFICATE_ARN = 'arn:aws:acm:us-east-1:<aid>:certificate/<cert>';
 const app = new cdk.App();
 ```
 
-so we need bunch of services involved and also something to get a hash of a files to update a version when its really needed.
+so we need bunch of services involved and also something to get a hash of a file to update a version when its really needed.
 
 #### Lambda stack
 
