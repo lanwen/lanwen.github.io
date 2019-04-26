@@ -22,7 +22,7 @@ const IndexPage = ({ data }) => {
     return (
         <Layout>
             <SEO
-                title="Home"
+                title="Merkushev Kirill's Blog - All posts"
                 keywords={[`lanwen`, `java`, `javascript`, `golang`]}
             />
 
@@ -34,7 +34,7 @@ const IndexPage = ({ data }) => {
                             {post.frontmatter.title}
                         </Link>
                     </Title>
-                    <Date>{post.fields.published}</Date>
+                    <Date>{post.fields.published} ({post.timeToRead} min to read)</Date>
                 </Post>
             ))}
         </Layout>

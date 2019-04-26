@@ -40,11 +40,12 @@ export default ({ data: { markdownRemark: post } }) => {
         <Layout>
             <SEO
                 title={post.frontmatter.title}
+                description={post.excerpt}
                 keywords={post.frontmatter.tags}
             />
             <h1>
                 {" "}
-                <Date>{post.fields.published}</Date>
+                <Date>{post.fields.published} :: {post.timeToRead} min to read</Date>
                 <Title>
                     <Anchor to={post.fields.slug}>§</Anchor>{" "}
                     {post.frontmatter.title}
@@ -64,6 +65,8 @@ export const query = graphql`
     query($slug: String!) {
         markdownRemark(fields: { slug: { eq: $slug } }) {
             html
+            excerpt
+            timeToRead
             frontmatter {
                 title
                 tags

@@ -3,10 +3,28 @@ title: "AWS CDK dev preview"
 tags: ["aws", "aws-cdk", "cloudformation"]
 ---
 
-So I was able to solve my task with this way. My requirements were mainly that I want to have bucket in a different 
-region than `us-east-1`, so I need to pass the lambda version somehow to another region
+Recently got an idea to organize a PR preview in github for my frontend code utilising S3 and CloudFront capabilites.
+I've found a nice [article](https://mk.gg/continuously-deploy-static-site-aws-codebuild-cloudfront-lambda-1/) 
+describing the basics. But since we are using configuration as a code approach - that was quite a good task to finally 
+try a new [AWS CDK](https://github.com/awslabs/aws-cdk) tool to work with CloudFormation.
 
-First definitions:
+### Spoiler
+What can I say right now - is that this tool is really promising and I've enjoyed to write a code with it. But still this tool
+lack a lot of UX. Documentation and examples are not full and hight level API is not stable yet at all.
+
+## Process
+
+First of all I've tried to find a ready-to-use example of Lambda@Edge and found only [issue](https://github.com/awslabs/aws-cdk/issues/1575).
+Explanations didn't help much, so I've moved into discovery on how to achieve my goal. With multiple sources I've found that the only working way 
+is to publish somehow a version, then get that and pass into CloudFront. 
+
+The main issue which made my case quite more complex than examples was mainly that I want to have bucket in a different 
+region than `us-east-1`, so I need to pass the lambda version somehow to another region.
+
+#### Definitions
+
+Of all required things:
+
 ```javascript:title=cdk.js (Definitions)
 const cdk = require('@aws-cdk/cdk');
 const lambda = require('@aws-cdk/aws-lambda');
@@ -18,16 +36,26 @@ const r53 = require('@aws-cdk/aws-route53');
 
 const sha256 = require('sha256-file');
 
-const CF_HOSTED_ZONE_ID = 'Z2FDTNDATAQYW2';
+// https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/quickref-route53.html
+const CF_HOSTED_ZONE_ID = 'Z2FDTNDATAQYW2'; 
+
+// To share between stacks easily
 const LAMBDA_OUTPUT_NAME = 'LambdaOutput';
 const LAMBDA_EDGE_STACK_NAME = 'stack-name';
+// Will be used as *.domain to handle pr preview requests
 const DOMAIN_NAME = 'example.com';
+// This cert should be created in us-east-1!
 const CERTIFICATE_ARN = 'arn:aws:acm:us-east-1:<aid>:certificate/<cert>';
 
 const app = new cdk.App();
 ```
 
-Then the edge lambda stack itself:
+so we need bunch of services involved and also something to get a hash of a files to update a version when its really needed.
+
+#### Lambda stack
+
+Then the edge lambda stack itself. Quite similar to any CloudFormation/AWS CDK examples:
+
 ```javascript:title=cdk.js (Edge Lambda stack)
 class LambdaStack extends cdk.Stack {
   constructor(parent, id, props) {
@@ -50,6 +78,7 @@ class LambdaStack extends cdk.Stack {
     const version = override.addVersion(':sha256:' + sha256('./lambda/index.js'));
 
    // the main magic to easily pass the lambda version to stack in another region
+   // this output is required
     new cdk.CfnOutput(this, LAMBDA_OUTPUT_NAME, {
       value: cdk.Fn.join(":", [
         override.functionArn,
@@ -60,25 +89,35 @@ class LambdaStack extends cdk.Stack {
 }
 ```
 
-Then cloud front definition:
+#### Huge definition of CloudFront
+
+It could be way less verbosive in case built-in hight-level api of aws cdk will support edge lamdas. 
+This stack definition contains the CloudFront definition itself, 
+S3 bucket to serve static files from and also a custom resource lambda to fetch the edge lambda version
 
 ```javascript:title=cdk.js (CloudFront)
 class StaticSiteStack extends cdk.Stack {
   constructor(parent, id, props) {
     super(parent, id, props);
 
+    /* 
+     * Custom resource lambda to query the edge lambda stack
+    */
     const lambdaProvider = new lambda.SingletonFunction(this, 'Provider', {
-      uuid: 'f7d4f730-4ee1-11e8-9c2d-fa7ae01bbebc',
+      // to avoid multiple lambda deployments in case we will use that custom resource multiple times
+      uuid: 'f7d4f730-4ee1-11e8-9c2d-fa7ae01bbebc', 
       code: lambda.Code.asset('./cfn'),
       handler: 'stack.handler',
       timeout: 60,
       runtime: lambda.Runtime.NodeJS810,
     });
 
-    // to allow aws sdk call inside the lambda
+    // To allow aws sdk call inside the lambda
+    // Such a nice API!
     lambdaProvider.addToRolePolicy(
       new iam.PolicyStatement()
         .allow()
+        // obviously you will need another policy in case you will choose another way to query the version
         .addAction('cloudformation:DescribeStacks')
         .addResource(`arn:aws:cloudformation:*:*:stack/${LAMBDA_EDGE_STACK_NAME}/*`)
     );
@@ -94,6 +133,7 @@ class StaticSiteStack extends cdk.Stack {
       }
     });
 
+    // Here we will upload our website
     const bucket = new s3.Bucket(this, 'bucket', {
       publicReadAccess: true // not really sure I need this permission actually
     });
@@ -105,10 +145,10 @@ class StaticSiteStack extends cdk.Stack {
     };
 
     // CloudFrontWebDistribution will simplify a lot, 
-    // but it doesn't support  lambdaFunctionAssociations in any way :(
+    // but it doesn't support  lambdaFunctionAssociations in any way right now :(
     const distribution = new cfr.CfnDistribution(this, 'WebSiteDistribution', {
       distributionConfig: {
-        aliases: ['site.example.com', '*.site.example.com'],
+        aliases: ['site.' + DOMAIN_NAME, '*.site.' + DOMAIN_NAME],
         defaultCacheBehavior: {
           allowedMethods: ['GET', 'HEAD'],
           cachedMethods: ['GET', 'HEAD'],
@@ -148,11 +188,11 @@ class StaticSiteStack extends cdk.Stack {
     });
 
     const zone = new r53.HostedZoneProvider(this, {
-      domainName: DOMAIN_NAME
-    }).findAndImport(this, 'MyPublicZone');
+      domainName: DOMAIN_NAME 
+    }).findAndImport(this, 'MyPublicZone'); // Name can be anything
 
     new r53.AliasRecord(this, 'BaseRecord', {
-      recordName: 'site',
+      recordName: 'site', // Meaningful part only, ommiting  DOMAIN_NAME
       zone: zone,
       target: {
         asAliasRecordTarget: () => ({
@@ -173,6 +213,7 @@ class StaticSiteStack extends cdk.Stack {
       }
     });
 
+    // Bunch of outputs to see everything manually
     new cdk.CfnOutput(this, 'Bucket', {
       value: `s3://${bucket.bucketName}`
     });
@@ -193,12 +234,12 @@ class StaticSiteStack extends cdk.Stack {
 }
 ```
 
-Then stack creation
+### Stack creation
 
 ```javascript:title=cdk.js (Stack creation)
 const ls = new LambdaStack(app, LAMBDA_EDGE_STACK_NAME, {
   env: {
-    region: 'us-east-1'
+    region: 'us-east-1' // note that edge can be deployed only here
   }
 });
 
@@ -207,25 +248,9 @@ new StaticSiteStack(app, 'cf-stack').addDependency(ls);
 app.run();
 ```
 
-To test that it works:
+### Custom resource lambda code
 
-```javascript:title=/lambda/index.js (Edge lambda)
-exports.handler = (event, context, callback) => {
-  console.log("REQUEST", JSON.stringify(event));
-
-  const status = '200';
-  const headers = {
-    'content-type': [{
-      key: 'Content-Type',
-      value: 'application/json'
-    }]
-  };
-
-  const body = JSON.stringify(event, null, 2);
-  return callback(null, {status, headers, body});
-};
-```
-Custom resource 
+Custom resource lambda which will grab the output
 
 ```javascript:title=/cfn/stack.js (Custom resource)
 exports.handler = (event, context) => {
@@ -259,4 +284,60 @@ exports.handler = (event, context) => {
 ```
 
 don't forget to add `/cfn/cfn-response.js` file with a content listed here:
+
 https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-function-code.html
+
+
+## To test that it works:
+
+We can create fake lambda with debug output first
+
+```javascript:title=/lambda/index.js (Edge lambda)
+exports.handler = (event, context, callback) => {
+  console.log("REQUEST", JSON.stringify(event));
+
+  const status = '200';
+  const headers = {
+    'content-type': [{
+      key: 'Content-Type',
+      value: 'application/json'
+    }]
+  };
+
+  const body = JSON.stringify(event, null, 2);
+  return callback(null, {status, headers, body});
+};
+```
+
+The real lambda btw looks something like this:
+
+```javascript
+exports.handler = (event, context, callback) => {
+  console.log("REQUEST", JSON.stringify(event));
+
+  const {request} = event.Records[0].cf;
+  const {host} = request.headers;
+
+  if (host && host.length) {
+    const [subdomain] = host[0].value.split(".");
+
+    if (subdomain) {
+      const [number, ...service] = subdomain.split('-');
+
+      if (number && service) {
+        const path = require('path');
+
+        if (!path.extname(request.uri)) {
+          request.uri = '/index.html';
+        }
+
+        request.uri = `/preview/${service.join("-")}/${number}${request.uri}`;
+      }
+
+      return callback(null, request);
+    }
+  }
+
+  callback("Missing Host header");
+};
+```

@@ -13,7 +13,7 @@ import lin from "../images/linkedin.svg";
 
 const Wrapper = styled.div`
     margin: 0 auto;
-    max-width: 900px;
+    max-width: 1080px;
     padding: ${rhythm(2)};
     padding-top: ${rhythm(1.5)};
     display: flex;

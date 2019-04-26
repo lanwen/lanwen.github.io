@@ -1,7 +1,7 @@
 module.exports = {
   siteMetadata: {
     title: `Kirill Merkushev's personal blog`,
-    description: `Tech and geek notes about programming, travelling and other`,
+    description: `Developer notes from my personal experience. Mostly Java, Golang, Javascript and infrastructure, but not limited to`,
     author: `Kirill Merkushev (github:lanwen)`,
   },
   plugins: [

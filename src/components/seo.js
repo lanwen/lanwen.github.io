@@ -52,7 +52,7 @@ function SEO({ description, lang, meta, keywords, title }) {
                 },
                 {
                     name: `twitter:creator`,
-                    content: conf.author,
+                    content: `@delnariel`,
                 },
                 {
                     name: `twitter:title`,
