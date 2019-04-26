@@ -25,7 +25,7 @@ region than `us-east-1`, so I need to pass the lambda version somehow to another
 
 Of all required things:
 
-```javascript:title=cdk.js (Definitions)
+```js:title=cdk.js (Definitions)
 const cdk = require('@aws-cdk/cdk');
 const lambda = require('@aws-cdk/aws-lambda');
 const s3 = require('@aws-cdk/aws-s3');
@@ -56,7 +56,7 @@ so we need bunch of services involved and also something to get a hash of a file
 
 Then the edge lambda stack itself. Quite similar to any CloudFormation/AWS CDK examples:
 
-```javascript:title=cdk.js (Edge Lambda stack)
+```js:title=cdk.js (Edge Lambda stack)
 class LambdaStack extends cdk.Stack {
   constructor(parent, id, props) {
     super(parent, id, props);
@@ -95,7 +95,7 @@ It could be way less verbosive in case built-in hight-level api of aws cdk will 
 This stack definition contains the CloudFront definition itself, 
 S3 bucket to serve static files from and also a custom resource lambda to fetch the edge lambda version
 
-```javascript:title=cdk.js (CloudFront)
+```js:title=cdk.js (CloudFront)
 class StaticSiteStack extends cdk.Stack {
   constructor(parent, id, props) {
     super(parent, id, props);
@@ -104,7 +104,10 @@ class StaticSiteStack extends cdk.Stack {
      * Custom resource lambda to query the edge lambda stack
     */
     const lambdaProvider = new lambda.SingletonFunction(this, 'Provider', {
-      // to avoid multiple lambda deployments in case we will use that custom resource multiple times
+      /* 
+         to avoid multiple lambda deployments 
+         in case we will use that custom resource multiple times 
+       */
       uuid: 'f7d4f730-4ee1-11e8-9c2d-fa7ae01bbebc', 
       code: lambda.Code.asset('./cfn'),
       handler: 'stack.handler',
@@ -112,12 +115,17 @@ class StaticSiteStack extends cdk.Stack {
       runtime: lambda.Runtime.NodeJS810,
     });
 
-    // To allow aws sdk call inside the lambda
-    // Such a nice API!
+    /*
+        To allow aws sdk call inside the lambda
+        Such a nice API!
+    */
     lambdaProvider.addToRolePolicy(
       new iam.PolicyStatement()
         .allow()
-        // obviously you will need another policy in case you will choose another way to query the version
+        /* 
+           obviously you will need another policy 
+           in case you will choose another way to query the version 
+         */
         .addAction('cloudformation:DescribeStacks')
         .addResource(`arn:aws:cloudformation:*:*:stack/${LAMBDA_EDGE_STACK_NAME}/*`)
     );
@@ -128,7 +136,7 @@ class StaticSiteStack extends cdk.Stack {
       properties: {
         StackName: LAMBDA_EDGE_STACK_NAME,
         OutputKey: LAMBDA_OUTPUT_NAME,
-        // just to change custom resource on code update
+        /* just to change custom resource on code update */
         LambdaHash: sha256('./lambda/index.js')
       }
     });
