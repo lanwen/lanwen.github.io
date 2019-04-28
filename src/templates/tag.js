@@ -23,7 +23,10 @@ export const query = graphql`
   query TagPage($tag: String) {
     markdown:allMarkdownRemark(
       limit: 1000
-      filter: { fields: { tags: { in: [$tag] } } }
+      filter: { 
+        frontmatter: {draft: {ne: true}}
+        fields: { tags: { in: [$tag] } } 
+      }
     ) {
       totalCount
         posts:nodes {
