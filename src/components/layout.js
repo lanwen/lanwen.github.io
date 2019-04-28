@@ -94,6 +94,10 @@ const Layout = ({ children }) => {
                     #___gatsby > div {
                         height: 100%;
                     }
+                    
+                    .anchor {
+                      background-image: none;
+                    }
                 `}
             />
             <Header>
