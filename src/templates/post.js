@@ -13,14 +13,13 @@ const Date = styled.div`
 `;
 
 const Tags = styled.div`
-    color: #ccc;
     display: flex;
     font-size: ${rhythm(0.6)};
     flex-wrap: wrap;
 `;
 
-const Tag = styled.div`
-    padding: ${rhythm(0.5)} ${rhythm(0.5)} 0 0;
+const Tag = styled(Link)`
+    margin: ${rhythm(0.5)} ${rhythm(0.5)} 0 0;
 `;
 
 const Title = styled.div``;
@@ -35,7 +34,7 @@ const Anchor = styled(Link)`
     }
 `;
 
-export default ({ data: { markdownRemark: post } }) => {
+export default ({ data: { markdownRemark: post }, pageContext: ctx }) => {
     return (
         <Layout>
             <SEO
@@ -45,16 +44,18 @@ export default ({ data: { markdownRemark: post } }) => {
             />
             <h1>
                 {" "}
-                <Date>{post.fields.published} :: {post.timeToRead} min to read</Date>
+                <Date>
+                    {post.fields.published} :: {post.timeToRead} min to read
+                </Date>
                 <Title>
                     <Anchor to={post.fields.slug}>§</Anchor>{" "}
                     {post.frontmatter.title}
                 </Title>
             </h1>
-            <div dangerouslySetInnerHTML={{ __html: post.html }} />
+            <div dangerouslySetInnerHTML={{ __html: post.html }}/>
             <Tags>
                 {post.frontmatter.tags.map(tag => (
-                    <Tag key={tag}>{`#${tag}`}</Tag>
+                    <Tag to={`/posts/tags/${tag}`} key={tag}>{`#${tag}`}</Tag>
                 ))}
             </Tags>
         </Layout>

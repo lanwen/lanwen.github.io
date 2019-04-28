@@ -1,60 +1,81 @@
 const path = require(`path`);
-const {createFilePath} = require(`gatsby-source-filesystem`)
+const { createFilePath } = require(`gatsby-source-filesystem`);
 
-exports.onCreateNode = ({node, getNode, actions}) => {
-  const {createNodeField} = actions;
+function partsOf(file) {
+    let dirs = file.relativeDirectory.split("/");
 
-  if (node.internal.type === `MarkdownRemark`) {
+    if (dirs.length > 1) {
+        return dirs[1].split("_");
+    }
 
-    const file = getNode(node.parent);
+    return file.name.split("_");
+}
 
-    const [date, name] = file.name.split("_");
-    const slug = `/${file.relativeDirectory}/${name}/`;
+exports.onCreateNode = ({ node, getNode, actions }) => {
+    const { createNodeField } = actions;
 
-    createNodeField({
-      node,
-      name: `slug`,
-      value: slug,
-    });
+    if (node.internal.type === `MarkdownRemark`) {
+        const file = getNode(node.parent);
 
-    createNodeField({
-      node,
-      name: `published`,
-      value: new Date(date),
-    })
-  }
+        const [date, name] = partsOf(file);
+        const slug = `/posts/${name}/`;
+
+        createNodeField({
+            node,
+            name: `slug`,
+            value: slug,
+        });
+
+        createNodeField({
+            node,
+            name: `published`,
+            value: new Date(date),
+        });
+    }
 };
 
-exports.createPages = async ({graphql, actions}) => {
-  const {createPage} = actions;
+function postsPages(posts, createPage) {
+    posts.forEach((post, index) => {
+        const previous = index === posts.length - 1 ? null : posts[index + 1];
+        const next = index === 0 ? null : posts[index - 1];
 
-  const {
-    data: {
-      allMarkdownRemark: {
-        nodes: posts
-      }
-    }
-  } = await graphql(`
-    {
-      allMarkdownRemark {
-        nodes {
-          fields {
-            slug
-          }
+        createPage({
+            path: post.fields.slug,
+            component: path.resolve(`./src/templates/post.js`),
+            context: {
+                // Data passed to context is available
+                // in page queries as GraphQL variables.
+                slug: post.fields.slug,
+                previous,
+                next,
+            },
+        });
+    });
+}
+
+exports.createPages = async ({ graphql, actions }) => {
+    const { createPage } = actions;
+
+    const {
+        data: {
+            allMarkdownRemark: { nodes: posts },
+        },
+    } = await graphql(`
+        {
+            allMarkdownRemark(sort: { fields: [fields___published], order: DESC }) {
+                nodes {
+                    fields {
+                        slug
+                    }
+                    frontmatter {
+                        title
+                        tags
+                        draft
+                    }
+                }
+            }
         }
-      }
-    }
-  `);
+    `);
 
-  posts.forEach(post => {
-    createPage({
-      path: post.fields.slug,
-      component: path.resolve(`./src/templates/post.js`),
-      context: {
-        // Data passed to context is available
-        // in page queries as GraphQL variables.
-        slug: post.fields.slug,
-      },
-    })
-  })
+    postsPages(posts, createPage);
 };

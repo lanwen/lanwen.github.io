@@ -34,7 +34,9 @@ const IndexPage = ({ data }) => {
                             {post.frontmatter.title}
                         </Link>
                     </Title>
-                    <Date>{post.fields.published} ({post.timeToRead} min to read)</Date>
+                    <Date>
+                        {post.fields.published} ({post.timeToRead} min to read)
+                    </Date>
                 </Post>
             ))}
         </Layout>
@@ -44,6 +46,7 @@ const IndexPage = ({ data }) => {
 export const query = graphql`
     query {
         markdown: allMarkdownRemark(
+            filter: {frontmatter: {draft: {ne: true}}}
             sort: { fields: [fields___published], order: DESC }
         ) {
             total: totalCount
