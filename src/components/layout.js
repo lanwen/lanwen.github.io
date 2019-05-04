@@ -45,9 +45,6 @@ const Footer = styled.div`
 
 const Menu = styled.div`
     display: flex;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Oxygen",
-        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-        sans-serif;
 `;
 
 const Contacts = styled.div`
