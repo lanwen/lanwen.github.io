@@ -6,7 +6,7 @@ tags: ["aws", "aws-cdk", "cloudformation"]
 Recently got an idea to organize a PR preview in github for my frontend code utilising S3 and CloudFront capabilites.
 I've found a nice [article](https://mk.gg/continuously-deploy-static-site-aws-codebuild-cloudfront-lambda-1/) 
 describing the basics. But since we are using configuration as a code approach - that was quite a good task to finally 
-try a new [AWS CDK](https://github.com/awslabs/aws-cdk) tool to work with CloudFormation.
+try a new [AWS CDK](https://github.com/awslabs/aws-cdk) tool to work with CloudFormation (version *0.28.0*).
 
 ### Spoiler
 What can I say right now - is that this tool is really promising and I've enjoyed to write a code with it. But still this tool
