@@ -1,0 +1,53 @@
+https://keybase.io/lanwen
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://lanwen.ru
+  * I am lanwen (https://keybase.io/lanwen) on keybase.
+  * I have a public key ASBbUPNRNTlGe0sNDv5gFyuPzJNTh7EzHRDjdznqL0hxOgo
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "012051d9a661b5e00ad1ec06ea0c5c5096cfbf03581a9cf467a702d1f99d2becb7610a",
+      "host": "keybase.io",
+      "kid": "01205b50f3513539467b4b0d0efe60172b8fcc935387b1331d10e37739ea2f48713a0a",
+      "uid": "534ba3120509f72c4ada79b2602bf919",
+      "username": "lanwen"
+    },
+    "merkle_root": {
+      "ctime": 1568213738,
+      "hash": "683417c20438c4adf38820828cd4c3a471c5f29b2bf2561cbda597a55cb47c26f36a86d503b72af53165a06c1ff7252a60832036b8a56d3bdaa0757dac8cac32",
+      "hash_meta": "2ea646bea58d311113deb1f4c32e41b32434ea224c173d4927c1e7348717b6fd",
+      "seqno": 6737407
+    },
+    "service": {
+      "entropy": "mGJ57/I3r1QpvBobvm0/J7Id",
+      "hostname": "lanwen.ru",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 2
+  },
+  "client": {
+    "name": "keybase.io go client",
+    "version": "4.4.1"
+  },
+  "ctime": 1568213744,
+  "expire_in": 504576000,
+  "prev": "9f924891f0fcfdc9fb6e54ffe9f6378cd6691e15789a34fd1e2906138c1a5f68",
+  "seqno": 16,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEgW1DzUTU5RntLDQ7+YBcrj8yTU4exMx0Q43c56i9IcToKp3BheWxvYWTESpcCEMQgn5JIkfD8/cn7blT/6fY3jNZpHhV4mjT9HikGE4waX2jEILU6rTLIadBnJXT4eN5xGm6rq2oPbIzkfeLQUdQ1OfCiAgHCo3NpZ8RA9WhfrarrGovo2hul/x6f4EqNKVxeVyu2d3rGizS2OsQWfJPuDDw342ULzP3lzzAHCBJa/arSKispVUYvBmExAahzaWdfdHlwZSCkaGFzaIKkdHlwZQildmFsdWXEIJ2yQT8aauSbipCdMEMv+b9GBu+TDkOZcnkBc9RhaKTBo3RhZ80CAqd2ZXJzaW9uAQ==
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/lanwen

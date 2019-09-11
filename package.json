@@ -1,7 +1,7 @@
 {
   "name": "lanwen-personal-blog",
   "private": true,
-  "description": "Personal blog",
+  "description": "Lanwen's Personal blog",
   "version": "0.1.0",
   "author": "Kirill Merkushev <lanwen@yandex.ru>",
   "dependencies": {
@@ -14,6 +14,7 @@
     "gatsby-plugin-react-helmet": "^3.0.12",
     "gatsby-plugin-tags": "^2.3.0",
     "gatsby-plugin-typography": "^2.2.13",
+    "gatsby-plugin-well-known": "^1.0.0",
     "gatsby-remark-autolink-headers": "^2.0.16",
     "gatsby-remark-code-titles": "^1.1.0-rc.0",
     "gatsby-remark-prismjs": "^3.2.8",
