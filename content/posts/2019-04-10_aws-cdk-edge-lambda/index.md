@@ -25,7 +25,8 @@ region than `us-east-1`, so I need to pass the lambda version somehow to another
 
 Of all required things:
 
-```js:title=cdk.js (Definitions)
+_cdk.js (Definitions)_
+```js
 const cdk = require('@aws-cdk/cdk');
 const lambda = require('@aws-cdk/aws-lambda');
 const s3 = require('@aws-cdk/aws-s3');
@@ -56,7 +57,8 @@ so we need bunch of services involved and also something to get a hash of a file
 
 Then the edge lambda stack itself. Quite similar to any CloudFormation/AWS CDK examples:
 
-```js:title=cdk.js (Edge Lambda stack)
+_cdk.js (Edge Lambda stack)_
+```js
 class LambdaStack extends cdk.Stack {
   constructor(parent, id, props) {
     super(parent, id, props);
@@ -95,7 +97,8 @@ It could be way less verbosive in case built-in hight-level api of aws cdk will 
 This stack definition contains the CloudFront definition itself, 
 S3 bucket to serve static files from and also a custom resource lambda to fetch the edge lambda version
 
-```js:title=cdk.js (CloudFront)
+_cdk.js (CloudFront)_
+```js
 class StaticSiteStack extends cdk.Stack {
   constructor(parent, id, props) {
     super(parent, id, props);
@@ -244,7 +247,8 @@ class StaticSiteStack extends cdk.Stack {
 
 ### Stack creation
 
-```javascript:title=cdk.js (Stack creation)
+_cdk.js (Stack creation)_
+```js
 const ls = new LambdaStack(app, LAMBDA_EDGE_STACK_NAME, {
   env: {
     region: 'us-east-1' // note that edge can be deployed only here
@@ -260,7 +264,8 @@ app.run();
 
 Custom resource lambda which will grab the output
 
-```javascript:title=/cfn/stack.js (Custom resource)
+_/cfn/stack.js (Custom resource)_
+```js
 exports.handler = (event, context) => {
   console.log("REQUEST RECEIVED:\n" + JSON.stringify(event));
 
@@ -300,7 +305,8 @@ https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-la
 
 We can create fake lambda with debug output first
 
-```javascript:title=/lambda/index.js (Edge lambda)
+_/lambda/index.js (Edge lambda)_
+```js
 exports.handler = (event, context, callback) => {
   console.log("REQUEST", JSON.stringify(event));
 
