@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { graphql, Link, useStaticQuery } from "gatsby";
+import { Link } from "gatsby";
 
 import { css, Global } from "@emotion/core";
 import styled from "@emotion/styled";
@@ -24,13 +24,6 @@ const Content = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-`;
-
-const Header = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: ${rhythm(2)};
 `;
 
 const Footer = styled.div`
@@ -67,20 +60,6 @@ const Social = styled.img`
 `;
 
 const EmptyLayout = ({ children }) => {
-    const {
-        site: { siteMetadata: conf },
-    } = useStaticQuery(
-        graphql`
-            query {
-                site {
-                    siteMetadata {
-                        title
-                    }
-                }
-            }
-        `
-    );
-
     return (
         <Wrapper>
             <Global
@@ -97,11 +76,6 @@ const EmptyLayout = ({ children }) => {
                     }
                 `}
             />
-
-            <Header>
-                {/*<Link to={`/`}>{conf.title}</Link>*/}
-            </Header>
-
             <Content>{children}</Content>
 
             <Footer>
