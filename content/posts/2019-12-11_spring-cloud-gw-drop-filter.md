@@ -4,12 +4,12 @@ tags: ["spring-cloud", "filters", "tips"]
 draft: false
 ---
 
-Faced the absense of ready-to-use filter to do that out-of-the box. So had to write one. 
-In my case that was useful to wildcard dosens of paths, but block explicitly a few of them.
+In my case that was useful to wildcard a bunch of paths, but block explicitly a few of them. 
+Solve that we could in two ways:
 
-### Filter
+### 1. Filter
 
-The filter itself is pretty straight-forward, just set the status and say that we've done.
+The filter itself is pretty straight, just set the status code and say that we've finished.
 
 ```java
 private static final GatewayFilter DROP_FILTER = (exchange, chain) -> {
@@ -18,9 +18,9 @@ private static final GatewayFilter DROP_FILTER = (exchange, chain) -> {
 };
 ```
 
-### Usage
+### 1.1 Usage
 
-We have to specify a new route, and what I don't really like in this case - still forced to specify the target uri. 
+We have to specify a new route - what I don't really like in this case - still forced to specify the target uri. 
 But don't worry, this endpoint won't be reached.
 
 ```java
@@ -30,11 +30,34 @@ public RouteLocator routes(RouteLocatorBuilder builder) {
             .route("dropped", route -> route
                     .path("/api/dropped")
                     .filters(spec -> spec.filter(DROP_FILTER))
-                    .uri("https://lanwen.ru") // never reached
+                    .uri("http://upstream") // never reached
             )
             .build();
 }
 ```
+
+### 2. "Drop-schema" uri
+
+With some [black magic](https://twitter.com/spencerbgibb/status/1204861992424628229) we can point to an 
+unexistent schema and save 6 lines with the same effect!
+
+```java
+@Bean
+public RouteLocator routes(RouteLocatorBuilder builder) {
+    return builder.routes()
+            .route("dropped", route -> route
+                    .path("/api/dropped")
+                    .filters(spec -> spec.setStatus(404))
+                    .uri("drop://request")
+            )
+            .build();
+}
+```
+
+The trick is that all the filters will skip the processing passing to the next one, only status one will apply. 
+
+The difference here comparing with the drop filter, 
+is that request still passes the whole chain (what is not a big deal with quite low number of default filters).
 
 ### Testing
 
