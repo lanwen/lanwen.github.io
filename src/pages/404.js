@@ -1,14 +1,29 @@
 import React from "react";
 
-import Layout from "../components/layout";
+import EmptyLayout from "../components/empty";
 import SEO from "../components/seo";
+import styled from "@emotion/styled";
+import { rhythm } from "../utils/typography";
+
+const Code = styled.div`
+    border-right: 2px solid;
+    font-size: ${rhythm(1)};
+    padding: 0 ${rhythm(0.5)};
+    text-align: center;
+`;
+
+const Message = styled.div`
+    font-size: ${rhythm(0.7)};
+    text-align: center;
+    padding: 0 ${rhythm(0.4)};
+`;
+
 
 const NotFoundPage = () => (
-    <Layout>
+    <EmptyLayout>
         <SEO title="404: Not found" />
-        <h1>NOT FOUND</h1>
-        <p>You just hit a route that doesn&#39;t exist... the sadness.</p>
-    </Layout>
+        <Code>404</Code><Message>NOT FOUND</Message>
+    </EmptyLayout>
 );
 
 export default NotFoundPage;
