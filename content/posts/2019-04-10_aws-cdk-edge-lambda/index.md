@@ -8,9 +8,10 @@ I've found a nice [article](https://mk.gg/continuously-deploy-static-site-aws-co
 describing the basics. But since we are using configuration as a code approach - that was quite a good task to finally 
 try a new [AWS CDK](https://github.com/awslabs/aws-cdk) tool to work with CloudFormation (version *0.28.0*).
 
-### Spoiler
-What can I say right now - is that this tool is really promising and I've enjoyed to write a code with it. But still this tool
-lack a lot of UX. Documentation and examples are not full and hight level API is not stable yet at all.
+> NOTE: article was updated to use version *1.19.0* which is stable instead of *0.28.0*
+
+What can I say right now - I've really enjoyed to write a code with it. With the GA it introduced even 
+create-change-set only behaviour, which is great for the secure deployments with supervision.
 
 ## Process
 
@@ -27,13 +28,14 @@ Of all required things:
 
 _cdk.js (Definitions)_
 ```js
-const cdk = require('@aws-cdk/cdk');
+const cdk = require('@aws-cdk/core');
 const lambda = require('@aws-cdk/aws-lambda');
 const s3 = require('@aws-cdk/aws-s3');
 const cfr = require('@aws-cdk/aws-cloudfront');
 const iam = require('@aws-cdk/aws-iam');
-const cf = require('@aws-cdk/aws-cloudformation');
+const cfn = require('@aws-cdk/aws-cloudformation');
 const r53 = require('@aws-cdk/aws-route53');
+const cr = require('@aws-cdk/custom-resources');
 
 const sha256 = require('sha256-file');
 
@@ -64,9 +66,9 @@ class LambdaStack extends cdk.Stack {
     super(parent, id, props);
 
     const override = new lambda.Function(this, 'your-lambda', {
-      runtime: lambda.Runtime.NodeJS810,
+      runtime: lambda.Runtime.NODEJS_10_X,
       handler: 'index.handler',
-      code: lambda.Code.asset('./lambda'),
+      code: lambda.Code.fromAsset('./lambda'),
       role: new iam.Role(this, 'AllowLambdaServiceToAssumeRole', {
         assumedBy: new iam.CompositePrincipal(
           new iam.ServicePrincipal('lambda.amazonaws.com'),
@@ -84,7 +86,7 @@ class LambdaStack extends cdk.Stack {
     new cdk.CfnOutput(this, LAMBDA_OUTPUT_NAME, {
       value: cdk.Fn.join(":", [
         override.functionArn,
-        version.functionVersion
+        version.version
       ])
     });
   }
@@ -112,10 +114,10 @@ class StaticSiteStack extends cdk.Stack {
          in case we will use that custom resource multiple times 
        */
       uuid: 'f7d4f730-4ee1-11e8-9c2d-fa7ae01bbebc', 
-      code: lambda.Code.asset('./cfn'),
+      code: lambda.Code.fromAsset('./cfn'),
       handler: 'stack.handler',
-      timeout: 60,
-      runtime: lambda.Runtime.NodeJS810,
+      timeout: cdk.Duration.seconds(60),
+      runtime: lambda.Runtime.NODEJS_10_X,
     });
 
     /*
@@ -123,19 +125,21 @@ class StaticSiteStack extends cdk.Stack {
         Such a nice API!
     */
     lambdaProvider.addToRolePolicy(
-      new iam.PolicyStatement()
-        .allow()
         /* 
            obviously you will need another policy 
            in case you will choose another way to query the version 
          */
-        .addAction('cloudformation:DescribeStacks')
-        .addResource(`arn:aws:cloudformation:*:*:stack/${LAMBDA_EDGE_STACK_NAME}/*`)
+        new iam.PolicyStatement({
+            actions: ['cloudformation:DescribeStacks'],
+            resources: [`arn:aws:cloudformation:*:*:stack/${LAMBDA_EDGE_STACK_NAME}/*`]
+        })
     );
 
    // This basically goes to another region to edge stack and grabs the version output
-    const stackOutput = new cf.CustomResource(this, 'StackOutput', {
-      lambdaProvider,
+    const stackOutput = new cfn.CustomResource(this, 'StackOutput', {
+      provider: new cr.Provider(this, 'StackOutputProvider', {
+        onEventHandler: lambdaProvider
+      }),
       properties: {
         StackName: LAMBDA_EDGE_STACK_NAME,
         OutputKey: LAMBDA_OUTPUT_NAME,
@@ -150,7 +154,7 @@ class StaticSiteStack extends cdk.Stack {
     });
 
     const origin = {
-      domainName: bucket.domainName,
+      domainName: bucket.bucketDomainName,
       id: 'origin1',
       s3OriginConfig: {}
     };
@@ -166,7 +170,7 @@ class StaticSiteStack extends cdk.Stack {
           defaultTtl: 60,
           maxTtl: 60,
           targetOriginId: origin.id,
-          viewerProtocolPolicy: cfr.ViewerProtocolPolicy.RedirectToHTTPS,
+          viewerProtocolPolicy: cfr.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
           forwardedValues: {
             cookies: {
               forward: 'none'
@@ -176,7 +180,7 @@ class StaticSiteStack extends cdk.Stack {
           lambdaFunctionAssociations: [
             {
               eventType: 'viewer-request',
-              lambdaFunctionArn: stackOutput.getAtt('Output')
+              lambdaFunctionArn: stackOutput.getAttString('Output')
             }
           ]
         },
@@ -186,7 +190,7 @@ class StaticSiteStack extends cdk.Stack {
         origins: [
           origin
         ],
-        priceClass: cfr.PriceClass.PriceClass100,
+        priceClass: cfr.PriceClass.PRICE_CLASS_100,
         viewerCertificate: {
           acmCertificateArn: CERTIFICATE_ARN,
           sslSupportMethod: cfr.SSLMethod.SNI
@@ -194,34 +198,34 @@ class StaticSiteStack extends cdk.Stack {
       },
       tags: [{
         key: 'stack',
-        value: this.name
+        value: this.stackId
       }]
     });
 
-    const zone = new r53.HostedZoneProvider(this, {
-      domainName: DOMAIN_NAME 
-    }).findAndImport(this, 'MyPublicZone'); // Name can be anything
+    const zone = r53.HostedZone.fromLookup(this, 'MyPublicZone', {
+          domainName: DOMAIN_NAME
+        });
 
-    new r53.AliasRecord(this, 'BaseRecord', {
+    new r53.ARecord(this, 'BaseRecord', {
       recordName: 'site', // Meaningful part only, ommiting  DOMAIN_NAME
       zone: zone,
-      target: {
-        asAliasRecordTarget: () => ({
+      target: r53.RecordTarget.fromAlias({
+        bind: () => ({
           hostedZoneId: CF_HOSTED_ZONE_ID,
-          dnsName: distribution.distributionDomainName
+          dnsName: distribution.attrDomainName
         })
-      }
+      })
     });
 
-    new r53.AliasRecord(this, 'StarRecord', {
+    new r53.ARecord(this, 'StarRecord', {
       recordName: '*.site',
       zone: zone,
-      target: {
-        asAliasRecordTarget: () => ({
+      target: r53.RecordTarget.fromAlias({
+        bind: () => ({
           hostedZoneId: CF_HOSTED_ZONE_ID,
-          dnsName: distribution.distributionDomainName
+          dnsName: distribution.attrDomainName
         })
-      }
+      })
     });
 
     // Bunch of outputs to see everything manually
@@ -230,7 +234,7 @@ class StaticSiteStack extends cdk.Stack {
     });
 
     new cdk.CfnOutput(this, 'CfDomain', {
-      value: distribution.distributionDomainName
+      value: distribution.attrDomainName
     });
 
     new cdk.CfnOutput(this, 'CfId', {
@@ -239,7 +243,7 @@ class StaticSiteStack extends cdk.Stack {
 
     // to reverify it was really updated to a proper version
     new cdk.CfnOutput(this, 'LambdaEdge', {
-      value: stackOutput.getAtt('Output')
+      value: stackOutput.getAttString('Output')
     });
   }
 }
@@ -255,9 +259,13 @@ const ls = new LambdaStack(app, LAMBDA_EDGE_STACK_NAME, {
   }
 });
 
-new StaticSiteStack(app, 'cf-stack').addDependency(ls);
-
-app.run();
+new StaticSiteStack(app, 'cf-stack', { 
+    // to properly lookup the hosted zone
+    env: {
+       account: process.env.CDK_DEFAULT_ACCOUNT,
+       region: process.env.CDK_DEFAULT_REGION,
+    },
+}).addDependency(ls);
 ```
 
 ### Custom resource lambda code
@@ -299,6 +307,9 @@ exports.handler = (event, context) => {
 don't forget to add `/cfn/cfn-response.js` file with a content listed here:
 
 https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-function-code.html
+
+> NOTE: for some reason I wasn't able to resolve the file properly as a separate `cfn-response` module, so replaced it
+> with `response = { ... }` object before the lambda
 
 
 ## To test that it works:
