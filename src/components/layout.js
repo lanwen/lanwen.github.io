@@ -128,7 +128,7 @@ const Layout = ({ children }) => {
                         },
                     ].map(({ key, url, image }) => (
                         <FooterLink key={key}>
-                            <a target={"_blank"} href={url}>
+                            <a target={"_blank"} href={url} rel="noopener noreferrer">
                                 <Social src={image} alt={key} />
                             </a>
                         </FooterLink>

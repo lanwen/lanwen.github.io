@@ -74,7 +74,7 @@ class LambdaStack extends cdk.Stack {
           new iam.ServicePrincipal('lambda.amazonaws.com'),
           new iam.ServicePrincipal('edgelambda.amazonaws.com'),
         ),
-        managedPolicyArns: ['arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole']
+        managedPolicies: [iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole')]
       })
     });
 
