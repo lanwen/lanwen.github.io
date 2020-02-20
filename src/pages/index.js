@@ -165,7 +165,6 @@ const IndexPage = ({ data }) => {
                 <BlankItem x={1.6} offset={1}>Blog</BlankItem>
                 <Timeline>
                     {Object.keys(byMonth)
-                        .sort((a, b) => b - a)
                         .map(month => {
                             return (<Period key={month}>
                                 <PeriodTitle>{month}</PeriodTitle>
