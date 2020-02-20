@@ -6,7 +6,7 @@ tags: ["aws", "aws-cdk", "cloudformation", "vpn"]
 AWS not that far ago announced managed [Client VPN](https://docs.aws.amazon.com/vpn/latest/clientvpn-admin/what-is.html),
 which is a really simple way of scalable and easy-to-maintain solution. 
 
-To get it done, I've took [AWS CDK](https://aws.amazon.com/cdk) version `1.20.0`, 
+To get it done, I've taken [AWS CDK](https://aws.amazon.com/cdk) version `1.20.0`, 
 I already had some [nice experience](/posts/tags/aws-cdk) with it, 
 so all new things trying to do with this lib.
 
