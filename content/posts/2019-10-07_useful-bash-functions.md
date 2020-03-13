@@ -12,7 +12,7 @@ Some of the tips are organised already in the [my dotfiles](https://github.com/l
 ```bash
 random-string()
 {
-    cat /dev/urandom | env LC_CTYPE=C tr -dc 'a-zA-Z0-9' | fold -w ${1:-32} | head -n ${1:-1}
+    cat /dev/urandom | env LC_CTYPE=C env LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w ${1:-32} | head -n ${1:-1}
 }
 ```
 
