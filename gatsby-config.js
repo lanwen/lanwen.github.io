@@ -3,6 +3,7 @@ module.exports = {
         title: `Kirill Merkushev's personal blog`,
         description: `Developer notes from my personal experience. Mostly Java, Golang, Javascript and infrastructure, but not limited to`,
         author: `Kirill Merkushev (github:lanwen)`,
+        siteURL: "https://lanwen.ru",
     },
     plugins: [
         `gatsby-plugin-react-helmet`,
