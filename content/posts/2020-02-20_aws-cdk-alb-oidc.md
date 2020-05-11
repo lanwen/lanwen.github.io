@@ -1,6 +1,6 @@
 ---
 title: "How to secure target behind AWS ALB with OIDC and cdk"
-tags: ["aws", "aws-cdk", "cloudformation", "security"]
+tags: ["aws", "aws-cdk", "cloudformation", "security", "infrastructure"]
 ---
 
 Recently found a tremendous article on [How to secure something with ALB authentication?](https://cloudonaut.io/how-to-secure-your-devops-tools-with-alb-authentication/).

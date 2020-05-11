@@ -86,6 +86,7 @@ dependencies {
 
 The most complicated gradle file is the test one. We need to grab the functions jar along with the test dependencies.
 
+_tests/build.gradle_
 ```groovy
 plugins {
     id 'java'

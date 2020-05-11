@@ -1,6 +1,6 @@
 ---
 title: "AWS Client VPN with mutual TLS"
-tags: ["aws", "aws-cdk", "cloudformation", "vpn"]
+tags: ["aws", "aws-cdk", "cloudformation", "vpn", "infrastructure"]
 ---
 
 AWS not that far ago announced managed [Client VPN](https://docs.aws.amazon.com/vpn/latest/clientvpn-admin/what-is.html),
