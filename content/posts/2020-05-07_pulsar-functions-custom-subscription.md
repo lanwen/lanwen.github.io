@@ -3,7 +3,7 @@ title: "How to subscribe a pulsar function on the earliest position"
 tags: ["pulsar", "pulsar-functions"]
 ---
 
-[Pulsar functions](https://pulsar.apache.org/docs/en/functions-overview/) are great way of doing something simple with
+[Pulsar functions](https://pulsar.apache.org/docs/en/functions-overview/) are a great way of doing something simple with
 the messages in topic. However, at the moment of the 2.5.1 pulsar,
 the default version of a subscription points to the latest position, and you can't change it within the function creation call. 
 Which means function would see only messages after function was created. How to adjust that?
