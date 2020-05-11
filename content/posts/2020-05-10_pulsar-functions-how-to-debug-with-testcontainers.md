@@ -342,7 +342,7 @@ System.out.println(String.format(
 #### De/Serialization
 
 I wasn't able to get working SerDe as it's intended, 
-so I just embedded the class usage and filled an issue [apache/pulsar#6883](https://github.com/apache/pulsar/issues/6883).
+so I just embedded the class usage and created an issue [apache/pulsar#6883](https://github.com/apache/pulsar/issues/6883).
 
 
 #### Additional features
