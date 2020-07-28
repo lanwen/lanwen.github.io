@@ -1,5 +1,5 @@
 ---
-title: "AWS CDK dev preview"
+title: "AWS CDK dev preview with AWS Lamda@Edge"
 tags: ["aws", "aws-cdk", "cloudformation"]
 ---
 
