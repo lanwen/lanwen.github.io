@@ -47,7 +47,7 @@ However, this approach have a few significant drawbacks:
 
 ### @MethodSource improvements
 
-Now, getting something like
+Now, getting something like:
 
 ```java
 @ParameterizedTest
@@ -56,9 +56,13 @@ Now, getting something like
 void shouldRouteTo(TestRouteDetails route) 
 ```
 
-we have power to apply some pre-processing in the methods, what could help us to handle different virtual hosts for example, 
-passed as additional argument. Just to go for a loop, stream or specific algorithm and add a
-parameter to the objects used for test data definitions. Should work fine, however, still could be improved.
+we have power to apply some pre-processing in the methods. It could help us, for example, to handle different virtual hosts 
+passed as additional argument. 
+
+Just go for a loop, stream or specific algorithm and add a
+parameter to objects used for test data definitions. 
+
+Should work fine, however, still could be improved.
 
 ### Default method tests in an interface
 
