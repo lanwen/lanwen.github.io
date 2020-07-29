@@ -41,7 +41,7 @@ However, this approach have a few significant drawbacks:
 
 - Just take a look on the arguments number - hard to read and add more - what if we need another optional arg - like header?
     That would require us to adjust all lines to contain something on the proper place - easy to make a typo!
-- Hard to maintain separate lists, grouped logically.
+- Hard to maintain separate lists, grouped logically - more services and paths to check - harder it gets to add new in a proper place.
 
 `@MethodSource` would definitely help here, with a more complicated object as an argument.
 
@@ -56,15 +56,15 @@ Now, getting something like
 void shouldRouteTo(TestRouteDetails route) 
 ```
 
-Now, we could increase the task complexity with handling different virtual hosts case. Which is basically, adding some
-specific header to each group. Since we're owners of the producer method - it's possible just to go for a loop and add same
-parameter to a dynamic part. Should work fine, however, could be still improved.
+we have power to apply some pre-processing in the methods, what could help us to handle different virtual hosts for example, 
+passed as additional argument. Just to go for a loop, stream or specific algorithm and add a
+parameter to the objects used for test data definitions. Should work fine, however, still could be improved.
 
-### Default method tests in interface
+### Default method tests in an interface
 
-JUnit 5 supports test method being declared in an interface default method. That gives us some options
-on how we could group method sources. We could declare test and list required method in the annotation,
-but provide the method itself in the implementation class!
+JUnit 5 supports test methods declared as interface default methods. That gives us some options
+on how we could group method sources. We could declare test method along the list of annotations (referencing method source names),
+but provide the method source itself in the implementation class!
 
 ```java
 interface GatewayTest {
@@ -80,21 +80,24 @@ interface GatewayTest {
 
 class ServiceMainTest implements GatewayTest {
     // declare the routes method
+    static List<TestRouteDetails> routes() {
 }
 ```
 
 JUnit would be smart enough to pick it up from the implementation and execute everything the same way, 
-test method would be in the class. 
+as if test method be in the implementation class. 
 
 However, this schema is still not flexible enough - we still want to have multiple groups within the class
-and that could be different from class to class. Here comes the extension point called `ArgumentsProvider`.
+and that could be different from class to class. 
+
+Here comes to the light an extension point called `ArgumentsProvider`.
 
 ## Custom ArgumentsProvider
 
-Nice option here would be to get rid of the required definition of the specific method, and add an option
-to get some meta-information for a specific group, which could be used as a test argument alongside the main arg.
+Nice option here would be to get rid of the required hardcoded specific method name, 
+as well as annotate any kind of method, which then will be discovered automatically and combined with an info from the annotation.
 
-To do that - let's define a dedicated annotation. It would be used later to discover methods, providing arguments.
+Let's define a dedicated annotation for that.
 
 ```java
 @Target({ElementType.METHOD})
@@ -104,7 +107,7 @@ To do that - let's define a dedicated annotation. It would be used later to disc
 }
 ```
 
-Also, we need provider itself
+Also, we need a provider itself
 ```java
 class RoutesProvider implements ArgumentsProvider {
     @Override
@@ -143,7 +146,7 @@ class RoutesProvider implements ArgumentsProvider {
 That's mostly copy of the default method source provider - with the difference that it doesn't have to be generic at all.
 Only our case and some assumptions.
 
-Last bit - annotate test method with `@ArgumentsSource(RoutesProvider.class)`
+Last bit - annotate test method (in the interface) with `@ArgumentsSource(RoutesProvider.class)`
 
 Then we can add as many methods with test routes as we want with any name we want and clear semantic:
 
@@ -167,5 +170,5 @@ static List<TestRouteDetails> routesGate() {
 Thanks to JUnit 5, in the test report all tests would contain string representation of arguments in their names, so 
 it would be easy to find class, group and concrete line with test route in case of failure.
 
-You could get further and annotate each class with some annotation, providing an additional context. Like something you 
+You could go further and annotate each class with some annotation, providing an additional context. Like, something you 
 would pass to docker, before it starts containers (I use it to pass upstream network aliases to docker).
