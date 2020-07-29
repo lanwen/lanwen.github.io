@@ -13,6 +13,7 @@ import gh from "../images/github.svg";
 
 const Post = styled.div`
     display: flex;
+    margin-bottom: ${rhythm(0.4)};
 `;
 
 const PostTitle = styled.div`
@@ -114,6 +115,7 @@ const PeriodContent = styled.div`
   border-left: 1px solid #2d2d2d;
   padding-left: 10px;
   padding-top: 10px;
+  padding-bottom: ${rhythm(0.2)};
 `;
 
 const Social = styled.img`
