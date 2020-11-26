@@ -1,5 +1,5 @@
 ---
-title: "How to retry or repeate JavaScript promise"
+title: "How to retry or repeat JavaScript promise"
 tags: ["javascript", "coding"]
 ---
 
