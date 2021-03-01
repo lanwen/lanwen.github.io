@@ -264,7 +264,9 @@ stage('infrastructure') {
 
 if the condition evaluates to false - it wouldn't even start an agent to skip the set of stages - so that would be quite fast!
 
->NOTE: I noticed that in the nested stages `tool {}` section doesn't work! Thus you have to script it or use docker.
+> NOTE: I noticed that in the nested stages `tool {}` section doesn't work! Thus you have to script it or use docker.
+> That could be done with `environment { PATH = "${tool(name: 'jdk-15', type: 'jdk')}/bin:$PATH" }` construct for example.
+
 
 
 ### More on conditions
