@@ -5,9 +5,8 @@ tags: ["groovy", "jenkins", "ci"]
 
 ## And why would you need that?
 
-I personally don't like Jenkins and would recommend considering alternatives if possible - like GitHub Actions, simple 
-AWS Lambdas or something else to keep away from the Jenkins. However, despite the Jenkins in 2021 still more like a poorly 
-written automation framework, always in a PoC stage, it's still a thing. I actually admire Jenkins for being such a 
+Despite the Jenkins is still more like an automation framework, in 2021 it's still a powerful tool to solve issues. 
+I admire Jenkins for being such a 
 customizable thing - you can do whatever you want, if you have some extensive time to debug and really know what do you
 want.
 
@@ -21,9 +20,8 @@ the _scripting_ and _declarative_ pipeline difference. So most of the time it's 
 pipeline as a *scripting* pipeline to be flexible in the things and feed it with params. But would that work with 
 a *declarative* pipeline? 
 
-Yes, it would. Because of the _always-in-PoC-stage_ fame of Jenkins, some declarative pipeline features that wasn't more 
-than a hack without much of support for parameters and actually extraction to a library came unnoticed by the wide community.
-That was released quite for a while ago and now should be stable: https://www.jenkins.io/blog/2017/10/02/pipeline-templates-with-shared-libraries/
+Yes, it would. Some declarative pipeline features came unnoticed by me, however quite a lot of goodies were released 
+a while ago and now should be fully stable: https://www.jenkins.io/blog/2017/10/02/pipeline-templates-with-shared-libraries/
 
 So back to the question - how to reuse the pipeline really and make it configurable? That are two different questions.
 
@@ -265,6 +263,9 @@ stage('infrastructure') {
 ```
 
 if the condition evaluates to false - it wouldn't even start an agent to skip the set of stages - so that would be quite fast!
+
+>NOTE: I noticed that in the nested stages `tool {}` section doesn't work! Thus you have to script it or use docker.
+
 
 ### More on conditions
 
