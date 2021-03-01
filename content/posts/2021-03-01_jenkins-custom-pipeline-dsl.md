@@ -11,7 +11,7 @@ written automation framework, always in a PoC stage, it's still a thing. I actua
 customizable thing - you can do whatever you want, if you have some extensive time to debug and really know what do you
 want.
 
-I wanted to get a short version of our deployment pipeline copied across dozens of projects in mostly the same shape with 
+I wanted to get a short version of our deployment pipeline copied across dozens of projects in a mostly the same shape with 
 exclusion for a few configuration properties. The officially recommended way of dealing with that kind of duplication - 
 moving everything into a shared lib. We obviously had that already for steps, however, how to extract the entire pipeline?
 
@@ -19,9 +19,11 @@ Well, that's the point where official documentation becomes vague - most of the 
 `var/backendPipeline.groovy` file with `def call() {}` method. That's simple - our steps work this way. I assume you aware of
 the _scripting_ and _declarative_ pipeline difference. So most of the time it's recommended by the community to extract your 
 pipeline as a *scripting* pipeline to be flexible in the things and feed it with params. But would that work with 
-a *declarative* pipeline? Yes, it would. Because of the always-in-PoC-stage fame of Jenkins, community mostly remembers 
-days when declarative pipeline wasn't more than a hack without much of support for parameters and actually extraction to a library.
-That changed quite for a while: https://www.jenkins.io/blog/2017/10/02/pipeline-templates-with-shared-libraries/
+a *declarative* pipeline? 
+
+Yes, it would. Because of the _always-in-PoC-stage_ fame of Jenkins, some declarative pipeline features that wasn't more 
+than a hack without much of support for parameters and actually extraction to a library came unnoticed by the wide community.
+That was released quite for a while ago and now should be stable: https://www.jenkins.io/blog/2017/10/02/pipeline-templates-with-shared-libraries/
 
 So back to the question - how to reuse the pipeline really and make it configurable? That are two different questions.
 
