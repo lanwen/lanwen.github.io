@@ -63,7 +63,7 @@ domain and describe things in a self-documented way?
 
 ### Groovy magic
 
-What is really cool - `Jenkinsfile`s are still kinda... groovy. Not fully, but almost. Thus, we can you some magic of groovy DSLs.
+What is really cool - `Jenkinsfile`s are still kinda... groovy. Not fully, but almost. Thus, we can use some magic of groovy DSLs.
 I found a great article which explains mostly everything https://sandstorm.de/de/blog/post/how-to-create-a-dsl-with-groovy.html,
 so I would only mention a few caveats and the end-result.
 
@@ -73,7 +73,8 @@ My DSL expected to look like this:
 backendPipeline {
     branch "master"
 
-    // module expected to build a docker image and inject it as a parameter during the deployment with the name
+    // module expected to build a docker image and 
+    // inject it as a parameter during the deployment with the name
     module "app", export: "DockerImage"
     module "proxy", export: "ProxyDockerImage"
 
@@ -95,7 +96,7 @@ backendPipeline {
 ```
 
 > NOTE: As you can see - not that much changed compared to a naive Map-like solution, just with some syntax sugar it reads slightly better...
-> So if it's worth of maintaining a bunch of additional code for the DSL itself... not sure, but I like human-readable DSLs, and it's fun to develop them!
+> If it's worth of maintaining a bunch of additional code for the DSL itself... not sure, but I like human-readable DSLs, and it's fun to develop them!
 
 Following the mentioned article, code to support the DSL should be like bunch of configuration classes, wrapped with the 
 DSL providers:
@@ -123,7 +124,8 @@ class BackendPipelineDSL {
     }
 
     // the simplest possible thing for the dsl - just a method assigning the value
-    // args could have default values, so that calling method without args would still do something
+    // args could have default values, so that calling 
+    // method without args would still do something
     // keeping it configurable
     void branch(String branch) {
         this.conf.branch = branch
@@ -131,14 +133,16 @@ class BackendPipelineDSL {
 
     // this case is interesting, as it would be called as 
     // `module "app", export: "DockerImage"` - with both named and unnamed params
-    // however, groovy moves named params to the first place as a map, so the method call above is actually 
+    // however, groovy moves named params to the first place as a map, 
+    // so the method call above is actually 
     // module([export: "DockerImage"], "app")
     void module(Map<String, String> args, String name) {
         this.conf.modules[name] = args.export
     }
 
     // we could go as deep as we need to define more DSL levels with some namespace
-    // so here it would be part `stack("service") { ... }` delegating to a StackConfigurationDSL with
+    // so here it would be part `stack("service") { ... }` 
+    // delegating to a StackConfigurationDSL with
     // StackConfiguration as an object to store result
     void stack(String name, Closure details) {
         def stack = new StackConfiguration()
@@ -166,12 +170,14 @@ class StackConfigurationDSL {
         this.conf = conf
     }
 
-    // replaces the content entirely, as we need either 2 default envs or just one specific
+    // replaces the content entirely, as we need either 2 default 
+    // envs or just one specific
     void only(String env) {
         this.conf.envs = [env]
     }
 
-    // we don't have to create a full-featured object to store params if just a map is enough
+    // we don't have to create a full-featured object to store 
+    // params if just a map is enough
     void params(Closure body) {
         Map<String, Map<String, String>> params = [:]
         body.resolveStrategy = Closure.DELEGATE_FIRST
@@ -281,8 +287,8 @@ stage("docker build & push") {
             def images = [:] // this variable would be available in another stage after
             for (module in conf.modules) {
                 // some custom step returning the result
-                // pay attention to env.JOB_BASE_NAME and other global envs - they are quite useful to avoid
-                // unnessessary params
+                // pay attention to env.JOB_BASE_NAME and 
+                // other global envs - they are quite useful to avoid unnessessary params
                 images[module.value] = buildAndPush(env.JOB_BASE_NAME + "-" + module.key, module.key)
             }
         }
@@ -291,7 +297,8 @@ stage("docker build & push") {
 stage('deploy') {
     steps {
         script {
-            // iterate over the map and list from the config to create a stage via scripted pipeline
+            // iterate over the map and list from the config to 
+            // create a stage via scripted pipeline
             for (stack in conf.stacks) {
                 for (env in stack.value.envs) {
                     stage("${stack.key}:${env}") {
