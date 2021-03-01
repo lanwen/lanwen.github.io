@@ -3,16 +3,17 @@ title: "How to gracefully shutdown java application"
 tags: ["java", "graceful"]
 ---
 
-## In case you don't run spring boot web application...
+## In case you use a framework...
 
-In the spring boot web application that handled by default. However, what if we need to run something simple,
+In a spring boot web application graceful shutdown handled by default, webserver usually registers the hook.
+However, what if we need to run something simple,
 run until it got killed by some signal? What's an alternative to `while(true)`?
 
 `shutdownHook` with `CountDownLatch` to the resque!
 
 ### The actual code
 
-The code snippet itself is quite a simple:
+The code snippet itself is quite simple:
 
 ```java
 @Slf4j
