@@ -80,14 +80,12 @@ backendPipeline {
         // this is an optional parameter in case we don't need to deploy to both envs we have
         only "staging" // default: "staging" and "prod"
 
-        params { // some parameters we have to specify manually depending on the env
-            staging = [
-                RemoteBucketParam: "lksd4nnl.s3.aws.com",
-            ]
-
-            prod = [
-                RemoteBucketParam: "lksd4nnl.s3.aws.com"
-            ]
+        // some parameters we have to specify manually depending on the env
+        params("staging") {
+            RemoteBucketParam = "lksd4nnl.s3.aws.com"
+        }
+        params("prod") {
+            RemoteBucketParam = "lksd4nnl.s3.aws.com"
         }
     }
 }
@@ -111,7 +109,11 @@ class BackendPipelineConfiguration {
 
 class StackConfiguration {
     List<String> envs = ["staging", "prod"] // `only "env"` would override this list entirely
-    Map<String, Map<String, String>> params = [:]
+    Map<String, Map<String, String>> params = [:] 
+    
+    Map<String, String> params(String env) {
+        return this.params.get(env, [:])
+    }
 }
 
 class BackendPipelineDSL {
@@ -176,13 +178,13 @@ class StackConfigurationDSL {
 
     // we don't have to create a full-featured object to store 
     // params if just a map is enough
-    void params(Closure body) {
+    void params(String env, Closure body) {
         Map<String, Map<String, String>> params = [:]
         body.resolveStrategy = Closure.DELEGATE_FIRST
         body.delegate = params
         body()
         // don't forget to bring it back to an object we use later
-        this.conf.params = params
+        this.conf.params[env] = params
     }
 }
 ```
@@ -284,15 +286,20 @@ Obviously not everything could be expressed via the declarative pipeline. In tha
 embedded into the declarative:
 
 ```groovy
+// this variable would be available in other 
+// stages after to read/write if placed before the `pipeline {`
+def images = [:] 
+
+// here goes pipeline { ...
+
 stage("docker build & push") {
     steps {
         script {
-            def images = [:] // this variable would be available in another stage after
             for (module in conf.modules) {
                 // some custom step returning the result
                 // pay attention to env.JOB_BASE_NAME and 
-                // other global envs - they are quite useful to avoid unnessessary params
-                images[module.value] = buildAndPush(env.JOB_BASE_NAME + "-" + module.key, module.key)
+                // other global envs - they are quite useful to avoid unnecessary params
+                images[module.value] = buildAndPush(env.JOB_NAME.split("/")[1] + "-" + module.key, module.key)
             }
         }
     }
@@ -306,7 +313,8 @@ stage('deploy') {
                 for (env in stack.value.envs) {
                     stage("${stack.key}:${env}") {
                         // some custom step from the vars/deploy.groovy file
-                        deploy("${stack.key}-${env}", [ Env: env ] + images + stack.value.params.staging)
+                        // stack.value.params(env) is actually a method
+                        deploy("${stack.key}-${env}", [ Env: env ] + images + stack.value.params(env)) 
                     }
                 }
             }
