@@ -142,7 +142,7 @@ class BackendPipelineDSL {
     // so here it would be part `stack("service") { ... }` 
     // delegating to a StackConfigurationDSL with
     // StackConfiguration as an object to store result
-    void stack(String name, Closure details) {
+    void stack(String name, Closure details = {}) { // default empty closure
         def stack = new StackConfiguration()
         details.resolveStrategy = Closure.DELEGATE_FIRST
         details.delegate = new StackConfigurationDSL(stack)
