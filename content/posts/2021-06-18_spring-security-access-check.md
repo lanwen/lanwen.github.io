@@ -13,7 +13,7 @@ Everyone knows `.hasAuthority`, `.hasRole` authorize exchange specifications, ho
 
 ### Example
 
-Imagine you have some complex object as a principal - carefully parsed separately, and you have to check some properties of 
+You have some complex object as a principal - carefully parsed separately, and you need to check some properties of 
 that principal along with authorities.
 
 ```java
@@ -35,8 +35,13 @@ that principal along with authorities.
 ### What happens here?
 
 First, we have to provide an implementation of `ReactiveAuthorizationManager<AuthorizationContext>` interface, 
-with just one method to implement - `Mono<AuthorizationDecision> check(Mono<Authentication> authentication, AuthorizationContext ctx)`. Since it's just
-a one method - in the example that represented by a lambda. 
+with just one method to implement: 
+
+```java
+Mono<AuthorizationDecision> check(Mono<Authentication> authentication, AuthorizationContext ctx)
+```
+
+Since it's just one method - in the example that represented by a lambda. 
 
 Next, zipping together authority check with a principal check. Result of the zip (combined with logical `AND`) would be then 
 converted to an `AuthorizationDecision`. Pay attention to how request context allows us to grab a path variable `{id}` value via 
