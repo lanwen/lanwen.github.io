@@ -8,7 +8,7 @@ tags: ["spring-framework", "spring-security", "java"]
 It happens, that you have to change a token type. Or just want to secure a service with different auth mechanics. 
 For example, standard JWT and some other custom header with another JWT from internal service. How to achieve that? 
 
-NOTE: For those who can't remember the difference between _auth**e**ntication_ and _auth**o**rization_ (like me) - first comes the one
+>NOTE: For those who can't remember the difference between _auth**e**ntication_ and _auth**o**rization_ (like me) - first comes the one
 with `e` - same as with alphabet, then the one with `o` after an initial `auth`.
 
 So here, we don't touch authorization, as mechanic is the same for any kind of token to ensure if it would give enough rights
