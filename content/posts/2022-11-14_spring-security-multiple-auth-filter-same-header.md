@@ -5,7 +5,7 @@ tags: ["spring-framework", "spring-security", "java"]
 
 ## Introduction
 
-This is a follow-up post with some discoveries, noticed when implementing the strategy described in [Multiple authorization tokens checks in a Spring Security within WebFilters](/posts/2021-06-18_spring-security-multiple-auth-filters/), but with a same header used.
+This is a follow-up post with some discoveries, noticed when implementing the strategy described in [Multiple authorization tokens checks in a Spring Security within WebFilters](/posts/spring-security-multiple-auth-filters/), but with a same header used.
 In general, it's mostly the same, however, includes some non-obvious moments, worth noting.
 
 ## The main security configuration
@@ -43,8 +43,8 @@ to emphasize, that `securityMatcher` is just a low-level precondition, the confi
 ### 2. Multiple auth filters - which handles the token
 
 It's quite easy to operate with different headers, as then it's clear which filter should handle what. But what to do with the same default `Authorization` header?
-The answer is - use `setRequiresAuthenticationMatcher` on all the non-default, catch-all filters, which should check on the early stage if the request is actually could be authenticated with this filter
-based on the request we see.
+
+The answer is - use `setRequiresAuthenticationMatcher` on all the non-default filters. It should check during the early stage if the request could be authenticated with this filter.
 
 ```java 
 public class CustomTokenAuthWebFilter extends AuthenticationWebFilter {
@@ -126,7 +126,7 @@ or via the dsl.
 
 To test that later, the most convenient way is to use the `MockServer` and configure it to return the JWKS endpoint response.
 
-use the junit5 extension
+Use the junit5 extension:
 ```java
 @MockServerTest("spring.security.oauth2.resourceserver.jwt.jwk-set-uri=http://localhost:${mockServerPort}/mocked.jwks")
 ```
