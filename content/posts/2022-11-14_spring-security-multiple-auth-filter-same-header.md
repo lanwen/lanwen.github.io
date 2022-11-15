@@ -158,7 +158,7 @@ public static RSABase64EncodedKeyPair generateKeyPair() {
 }
 
 private String keyset() {
-    var jwkSet = new JWKSet(Keys.jwk(KEYPAIR.publicKey()));
+    var jwkSet = new JWKSet(jwk(KEYPAIR.publicKey()));
     return jwkSet.toString(true);
 }
 ```
@@ -166,6 +166,10 @@ private String keyset() {
 And to actually create a token in tests:
 
 ```java
+public static RSAKey jwk(String pubkey) {
+    return new RSAKey.Builder(parsePublicKey(pubkey)).keyIDFromThumbprint().build().toPublicJWK();
+}
+    
 public static String jwt() {
     RSAKey key = new RSAKey.Builder(Keys.parsePublicKey(KEYPAIR.publicKey()))
         .privateKey(parsePrivateKey(KEYPAIR.privateKey()))
@@ -190,6 +194,13 @@ public static RSAPrivateKey parsePrivateKey(String key) {
     var spec = new PKCS8EncodedKeySpec(byteKey);
     KeyFactory kf = KeyFactory.getInstance("RSA");
     return (RSAPrivateKey) kf.generatePrivate(spec);
+}
+
+public static RSAPublicKey parsePublicKey(String key) {
+    byte[] byteKey = Base64.getDecoder().decode(key.getBytes());
+    X509EncodedKeySpec X509publicKey = new X509EncodedKeySpec(byteKey);
+    KeyFactory kf = KeyFactory.getInstance("RSA");
+    return (RSAPublicKey) kf.generatePublic(X509publicKey);
 }
 ```
 
