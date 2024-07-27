@@ -8,10 +8,35 @@ tags: ["spring-framework", "spring-security", "java"]
 This is a follow-up post with some discoveries, noticed when implementing the strategy described in [Multiple authorization tokens checks in a Spring Security within WebFilters](/posts/spring-security-multiple-auth-filters/), but with a same header used.
 In general, it's mostly the same, however, includes some non-obvious moments, worth noting.
 
-## The main security configuration
+## ReactiveAuthenticationManagerResolver (way №1)
+
+This should be an alternative to the method described further down below via security matchers and filters.
+
+The point is that you implement `ReactiveAuthenticationManagerResolver<ServerWebExchange>`
+```java
+public Mono<ReactiveAuthenticationManager> resolve(ServerWebExchange context) {
+```
+
+Then we have the entire request to match and provide our authentication manager:
+```java
+ if (context.getRequest().getURI().getPath().startsWith("/special/path")) {
+    return new CustomTokenAuthenticationManager();
+ }
+ // else fallback to something else
+```
+
+Later, enable that resolver in the chain:
+
+```java
+ .oauth2ResourceServer(server -> server
+                .authenticationManagerResolver(resolver))
+```
+
+## The main security configuration (way №2)
 
 As you may know, all the fancy dsl for the spring security is just a way to configure a chain of security filters.
 So, here is a top of configuration tricks to get a desired result:
+
 
 ### 1. Security matchers
 
