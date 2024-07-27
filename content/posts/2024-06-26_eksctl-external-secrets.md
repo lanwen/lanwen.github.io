@@ -1,7 +1,7 @@
 ---
 title: "Deploying External Secrets with eksctl and Pod Identity Association"
 tags: ["k8s", "external-secrets", "eksctl"]
-draft: true
+draft: false
 ---
 
 # eksctl
