@@ -91,7 +91,7 @@ For me one or another could fail in case I had to add a new polic (update will f
 
 Let's imagine, that we need to manage secrets using GitOps approach, and don't pay crazy bills with hundreds of secrets, pulled from aws. Obvious choice would be to use [SealedSecrets](https://github.com/bitnami-labs/sealed-secrets). I wouldn't go here in the details on how painful it could be to manage hundreds of secrets with it, but it's a valid option! However, once the target secret is encrypted, you have to keep around the original *encryption key secret*, until you re-encrypt all the secrets with the new key (but then, you would need to keep that key around) - and somehow share that key with other clusters if they are provisioned from the same git repo. 
 
-README[suggests](https://github.com/bitnami-labs/sealed-secrets?tab=readme-ov-file#manual-key-management-advanced), that you can use the `SealedSecret` for that purpose, but then, you have to have that initial seed key somewhere. Chicken and the egg problem?
+README [suggests](https://github.com/bitnami-labs/sealed-secrets?tab=readme-ov-file#manual-key-management-advanced), that you can use the `SealedSecret` for that purpose, but then, you have to have that initial seed key somewhere. Chicken and the egg problem?
 
 There is, actually, a way to quickly download the current master key to share it later with another cluster:
 
