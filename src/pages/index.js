@@ -8,7 +8,6 @@ import { rhythm } from "../utils/typography";
 import { css, Global } from "@emotion/core";
 import styled from "@emotion/styled";
 
-import twitter from "../images/twitter.svg";
 import gh from "../images/github.svg";
 
 const Post = styled.div`
@@ -59,6 +58,21 @@ const BlankItem = styled(Item)`
     &:hover {
         color: #2d2d2d;
     }
+`;
+
+const Projects = styled.div`
+  display: flex;
+  align-items: stretch;
+`;
+
+const ProjectsLinks = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-left: 1px solid #2d2d2d;
+  padding-left: 10px;
+  margin-left: 10px;
+  padding-bottom: ${rhythm(0.2)};
 `;
 
 const Bottom = styled.div`
@@ -158,7 +172,13 @@ const IndexPage = ({ data }) => {
 
             <Top>
                 <h4>Merkushev Kirill's</h4>
-                <Item x={1.1} offset={3} href={"https://twitter.com/delnariel"} target={"_blank"}>Twitter <Social src={twitter} alt={"Twitter"} /></Item>
+                <Projects>
+                    <BlankItem x={1.1}>Projects</BlankItem>
+                    <ProjectsLinks>
+                        <a href={"https://coil3d.lanwen.dev"} target={"_blank"}>coil3d.lanwen.dev</a>
+                        <a href={"https://lanwen.github.io/frmtr/"} target={"_blank"}>lanwen.github.io/frmtr</a>
+                    </ProjectsLinks>
+                </Projects>
                 <Item x={1.3} offset={-1} href={"https://github.com/lanwen"} target={"_blank"}><Social src={gh} alt={"Github"} /> Code</Item>
                 {/*<Item x={1.8} offset={4} href={"/about"}>About</Item>*/}
             </Top>
