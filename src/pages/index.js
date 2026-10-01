@@ -117,6 +117,14 @@ const PeriodContent = styled.div`
   padding-bottom: ${rhythm(0.2)};
 `;
 
+const ProjectsSpacer = styled.div`
+  flex: 0;
+
+  @media(min-width: 750px) {
+    flex: 1 0 50%;
+  }
+`;
+
 const ProjectsLinks = styled(PeriodContent)`
   display: flex;
   flex-direction: column;
@@ -163,10 +171,9 @@ const IndexPage = ({ data }) => {
 
             <Top>
                 <h4>Merkushev Kirill's</h4>
+                <BlankItem x={1.1} offset={1}>Projects</BlankItem>
                 <Period>
-                    <PeriodTitle>
-                        <BlankItem x={1.1}>Projects</BlankItem>
-                    </PeriodTitle>
+                    <ProjectsSpacer />
                     <ProjectsLinks>
                         <a href={"https://coil3d.lanwen.dev"} target={"_blank"}>coil3d.lanwen.dev</a>
                         <a href={"https://lanwen.github.io/frmtr/"} target={"_blank"}>lanwen.github.io/frmtr</a>
