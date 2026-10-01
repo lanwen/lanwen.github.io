@@ -1,0 +1,11 @@
+---
+import Base from "../layouts/Base.astro";
+import IndexPage from "../templates/index.jsx";
+import { getPublishedPosts } from "../utils/posts";
+
+const posts = await getPublishedPosts();
+---
+
+<Base title="Merkushev Kirill's Blog - All posts" keywords={["lanwen", "java", "javascript", "golang"]}>
+    <IndexPage data={{ markdown: { posts } }} />
+</Base>

@@ -1,0 +1,15 @@
+{
+    "name": "Kirill Merkushev's personal blog",
+    "short_name": "Kirill Merkushev's personal blog",
+    "start_url": "/",
+    "background_color": "#fff",
+    "theme_color": "#fff",
+    "display": "minimal-ui",
+    "icons": [
+        {
+            "src": "/lanwen-icon.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
