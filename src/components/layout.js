@@ -7,7 +7,6 @@ import styled from "@emotion/styled";
 
 import { rhythm } from "../utils/typography";
 
-import twitter from "../images/twitter.svg";
 import gh from "../images/github.svg";
 import lin from "../images/linkedin.svg";
 
@@ -120,11 +119,6 @@ const Layout = ({ children }) => {
                             key: "linkedin",
                             url: "https://linkedin.com/in/kirill-merkushev/",
                             image: lin,
-                        },
-                        {
-                            key: "twitter",
-                            url: "https://twitter.com/delnariel",
-                            image: twitter,
                         },
                     ].map(({ key, url, image }) => (
                         <FooterLink key={key}>
