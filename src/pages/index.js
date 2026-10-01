@@ -60,21 +60,6 @@ const BlankItem = styled(Item)`
     }
 `;
 
-const Projects = styled.div`
-  display: flex;
-  align-items: stretch;
-`;
-
-const ProjectsLinks = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  border-left: 1px solid #2d2d2d;
-  padding-left: 10px;
-  margin-left: 10px;
-  padding-bottom: ${rhythm(0.2)};
-`;
-
 const Bottom = styled.div`
   flex: 2;
   display: flex;
@@ -132,6 +117,20 @@ const PeriodContent = styled.div`
   padding-bottom: ${rhythm(0.2)};
 `;
 
+const ProjectsSpacer = styled.div`
+  flex: 0;
+
+  @media(min-width: 750px) {
+    flex: 1 0 50%;
+  }
+`;
+
+const ProjectsLinks = styled(PeriodContent)`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
+
 const Social = styled.img`
     width: ${rhythm(0.8)};
     height: ${rhythm(0.8)};
@@ -172,13 +171,14 @@ const IndexPage = ({ data }) => {
 
             <Top>
                 <h4>Merkushev Kirill's</h4>
-                <Projects>
-                    <BlankItem x={1.1}>Projects</BlankItem>
+                <BlankItem x={1.1} offset={1}>Projects</BlankItem>
+                <Period>
+                    <ProjectsSpacer />
                     <ProjectsLinks>
                         <a href={"https://coil3d.lanwen.dev"} target={"_blank"}>coil3d.lanwen.dev</a>
                         <a href={"https://lanwen.github.io/frmtr/"} target={"_blank"}>lanwen.github.io/frmtr</a>
                     </ProjectsLinks>
-                </Projects>
+                </Period>
                 <Item x={1.3} offset={-1} href={"https://github.com/lanwen"} target={"_blank"}><Social src={gh} alt={"Github"} /> Code</Item>
                 {/*<Item x={1.8} offset={4} href={"/about"}>About</Item>*/}
             </Top>
