@@ -4,6 +4,7 @@ import { site } from "../utils/site";
 
 import "../static/prismjs.css";
 import "../static/autolink-headers.css";
+import "../static/theme-dark.css";
 
 const { title, description = site.description, keywords = [] } = Astro.props;
 const fonts = "//fonts.googleapis.com/css?family=Varela+Round:400|Lora:400,400i,700";
@@ -27,7 +28,8 @@ const fonts = "//fonts.googleapis.com/css?family=Varela+Round:400|Lora:400,400i,
         {keywords.length > 0 && <meta name="keywords" content={keywords.join(", ")} />}
         <link rel="icon" href="/lanwen-icon.png" type="image/png" />
         <link rel="manifest" href="/manifest.webmanifest" />
-        <meta name="theme-color" content="#fff" />
+        <meta name="theme-color" content="#fff" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#0d0221" media="(prefers-color-scheme: dark)" />
         <link rel="apple-touch-icon" sizes="512x512" href="/lanwen-icon.png" />
         <link href={fonts} rel="stylesheet" type="text/css" />
     </head>
