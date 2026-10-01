@@ -1,0 +1,29 @@
+/* rhythm(0.5) = 0.79rem, rhythm(0.6) = 0.948rem, rhythm(1) = 1.58rem */
+.date {
+    color: #ccc;
+    font-size: 0.79rem;
+    padding: 0.79rem 0;
+}
+
+.tags {
+    display: flex;
+    font-size: 0.948rem;
+    flex-wrap: wrap;
+}
+
+.tag {
+    margin: 0.79rem 0.79rem 0 0;
+}
+
+.title {
+}
+
+.anchor {
+    background-image: none;
+    visibility: hidden;
+    margin-left: -1.58rem;
+}
+
+h1:hover .anchor {
+    visibility: visible;
+}

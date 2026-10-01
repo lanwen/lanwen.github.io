@@ -1,0 +1,59 @@
+/* Was the <Global> block. #___gatsby and #___gatsby > div are gone: the
+   page content now sits directly in <body>. */
+:global(html),
+:global(body) {
+    height: 100vh;
+}
+
+:global(.anchor) {
+    background-image: none;
+}
+
+/* rhythm(2) = 3.16rem, rhythm(0.5) = 0.79rem, rhythm(0.4) = 0.632rem */
+.wrapper {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer {
+    display: flex;
+    align-items: center;
+    margin-top: 3.16rem;
+    text-decoration: none;
+    justify-content: space-between;
+}
+
+.menu {
+    display: flex;
+    margin-right: 3.16rem;
+}
+
+.contacts {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.contacts a {
+    background-image: none;
+    color: #575757;
+}
+
+.footerLink {
+    padding-right: 0.632rem;
+}
+
+.social {
+    width: 0.79rem;
+    height: 0.79rem;
+    margin: 0;
+}
