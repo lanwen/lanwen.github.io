@@ -26,3 +26,9 @@
 h1:hover .anchor {
     visibility: visible;
 }
+
+@media (prefers-color-scheme: dark) {
+    .date {
+        color: var(--dk-cyan);
+    }
+}

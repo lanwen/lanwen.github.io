@@ -31,6 +31,11 @@
         --dk-line: rgba(0, 240, 255, 0.4); /* timeline borders */
         --dk-line-soft: rgba(0, 240, 255, 0.22); /* hr, table rules */
 
+        /* turns the black-on-transparent svg icons (used as <img>) into
+           roughly --dk-cyan: black -> #04f0ff */
+        --dk-icon-filter: invert(77%) sepia(90%) saturate(2951%) hue-rotate(133deg)
+            brightness(100%) contrast(103%);
+
         /* glow, text-shadow only, never a layout box */
         --dk-glow: 0 0 6px rgba(255, 43, 214, 0.75), 0 0 16px rgba(255, 43, 214, 0.4);
 
