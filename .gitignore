@@ -54,9 +54,9 @@ typings/
 # dotenv environment variables file
 .env
 
-# gatsby files
-.cache/
-public
+# astro files (public/ is now source: static assets live there)
+dist/
+.astro/
 
 # Mac files
 .DS_Store
