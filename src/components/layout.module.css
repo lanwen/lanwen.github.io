@@ -61,3 +61,20 @@
     height: 0.79rem;
     margin: 0;
 }
+
+@media (prefers-color-scheme: dark) {
+    /* site title: faint neon halo, text-shadow only */
+    .header a {
+        text-shadow: var(--dk-knockout), 0 0 10px rgba(255, 43, 214, 0.55);
+    }
+
+    .contacts a {
+        color: var(--dk-muted);
+    }
+
+    /* the icons are black-on-transparent svg in <img>, so recolour them
+       to the cyan accent with a filter (no layout effect) */
+    .social {
+        filter: var(--dk-icon-filter);
+    }
+}

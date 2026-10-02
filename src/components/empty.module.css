@@ -54,3 +54,13 @@
     height: 0.79rem;
     margin: 0;
 }
+
+@media (prefers-color-scheme: dark) {
+    .contacts a {
+        color: var(--dk-muted);
+    }
+
+    .social {
+        filter: var(--dk-icon-filter);
+    }
+}

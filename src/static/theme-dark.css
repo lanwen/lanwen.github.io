@@ -1,0 +1,221 @@
+/*
+ * Dark colour scheme: "neon magenta cyberpunk".
+ *
+ * Switches on with the OS dark mode. Only colours are changed here, never
+ * layout, fonts, sizes or spacing, and nothing outside the media query below
+ * applies, so light mode is untouched.
+ *
+ * This file is imported by layouts/Base.astro after the Lincoln typography
+ * <style> (an inline string in <head>) and after prismjs.css, so the plain
+ * element selectors below win over both by source order at equal specificity.
+ * The CSS Modules (components/*.module.css, templates/*.module.css) have their
+ * own dark blocks that read the variables defined here.
+ */
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark;
+
+        /* surfaces */
+        --dk-bg: #0d0221; /* page background, near-black violet */
+        --dk-surface: #1a0b3d; /* code blocks */
+
+        /* text */
+        --dk-text: #e6e1f5; /* body text, soft lavender */
+        --dk-heading: #f6f2ff; /* headings, a bit brighter */
+        --dk-muted: #a99dcc; /* secondary text: dates, "min to read", comments */
+
+        /* accents */
+        --dk-magenta: #ff2bd6; /* primary: links, underline, blockquote bar */
+        --dk-magenta-hover: #ff7ae6; /* link hover */
+        --dk-cyan: #00f0ff; /* secondary: dates, anchor icon, 404, icons */
+        --dk-line: rgba(0, 240, 255, 0.4); /* timeline borders */
+        --dk-line-soft: rgba(0, 240, 255, 0.22); /* hr, table rules */
+
+        /* turns the black-on-transparent svg icons (used as <img>) into
+           roughly --dk-cyan: black -> #04f0ff */
+        --dk-icon-filter: invert(77%) sepia(90%) saturate(2951%) hue-rotate(133deg)
+            brightness(100%) contrast(103%);
+
+        /* glow, text-shadow only, never a layout box */
+        --dk-glow: 0 0 6px rgba(255, 43, 214, 0.75), 0 0 16px rgba(255, 43, 214, 0.4);
+
+        /* the page-colour halo Lincoln draws around link text so the
+           underline skips descenders; it must match the background */
+        --dk-knockout: 0.03em 0 var(--dk-bg), -0.03em 0 var(--dk-bg), 0 0.03em var(--dk-bg),
+            0 -0.03em var(--dk-bg), 0.06em 0 var(--dk-bg), -0.06em 0 var(--dk-bg),
+            0 0.06em var(--dk-bg), 0 -0.06em var(--dk-bg), 0.09em 0 var(--dk-bg),
+            -0.09em 0 var(--dk-bg), 0 0.09em var(--dk-bg), 0 -0.09em var(--dk-bg),
+            0.12em 0 var(--dk-bg), -0.12em 0 var(--dk-bg), 0.15em 0 var(--dk-bg),
+            -0.15em 0 var(--dk-bg);
+
+        /* Prism (code) */
+        --dk-code-text: #e6e1f5;
+        --dk-code-comment: #a99dcc;
+        --dk-code-punct: #c9bde8;
+        --dk-code-tag: #ff5c9d; /* tag, attr-name, deleted */
+        --dk-code-function-name: #00f0ff;
+        --dk-code-number: #ff9e3d; /* boolean, number, function */
+        --dk-code-property: #fff35c; /* property, class-name, constant, symbol */
+        --dk-code-keyword: #ff2bd6; /* selector, atrule, keyword, builtin */
+        --dk-code-string: #4dff9a; /* string, char, attr-value, regex, variable */
+        --dk-code-operator: #7aeaf5; /* operator, entity, url */
+        --dk-code-inline-bg: rgba(0, 240, 255, 0.1);
+        --dk-code-inline-text: #8ff7ff;
+    }
+
+    html {
+        background: var(--dk-bg);
+    }
+
+    ::selection {
+        background: rgba(255, 43, 214, 0.45);
+        color: #fff;
+    }
+
+    /* Lincoln globals */
+    body {
+        color: var(--dk-text);
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        color: var(--dk-heading);
+    }
+
+    a {
+        color: var(--dk-magenta);
+        text-shadow: var(--dk-knockout);
+        background-image: linear-gradient(
+            to top,
+            rgba(0, 0, 0, 0),
+            rgba(0, 0, 0, 0) 1px,
+            var(--dk-magenta) 1px,
+            var(--dk-magenta) 2px,
+            rgba(0, 0, 0, 0) 2px
+        );
+    }
+
+    a:hover,
+    a:active {
+        color: var(--dk-magenta-hover);
+        text-shadow: var(--dk-glow);
+        background-image: none;
+    }
+
+    blockquote {
+        border-left-color: var(--dk-magenta);
+        color: var(--dk-muted);
+        background-image: linear-gradient(to right, rgba(255, 43, 214, 0.12), rgba(255, 43, 214, 0));
+    }
+
+    blockquote cite {
+        color: var(--dk-text);
+    }
+
+    hr {
+        background: var(--dk-line-soft);
+    }
+
+    td,
+    th {
+        border-bottom-color: var(--dk-line-soft);
+    }
+
+    abbr,
+    acronym,
+    abbr[title] {
+        border-bottom-color: var(--dk-muted);
+    }
+
+    /* the permalink icon is a black-filled svg path */
+    h1 .anchor svg,
+    h2 .anchor svg,
+    h3 .anchor svg,
+    h4 .anchor svg,
+    h5 .anchor svg,
+    h6 .anchor svg {
+        fill: var(--dk-cyan);
+    }
+
+    /* prismjs.css, Tomorrow theme: same token groups, new values */
+    code[class*="language-"],
+    pre[class*="language-"] {
+        color: var(--dk-code-text);
+    }
+
+    pre[class*="language-"] {
+        background: var(--dk-surface);
+        box-shadow: inset 0 0 0 1px rgba(255, 43, 214, 0.28);
+    }
+
+    :not(pre) > code[class*="language-"] {
+        background: var(--dk-code-inline-bg);
+        color: var(--dk-code-inline-text);
+    }
+
+    .token.comment,
+    .token.block-comment,
+    .token.prolog,
+    .token.doctype,
+    .token.cdata {
+        color: var(--dk-code-comment);
+    }
+
+    .token.punctuation {
+        color: var(--dk-code-punct);
+    }
+
+    .token.tag,
+    .token.attr-name,
+    .token.namespace,
+    .token.deleted {
+        color: var(--dk-code-tag);
+    }
+
+    .token.function-name {
+        color: var(--dk-code-function-name);
+    }
+
+    .token.boolean,
+    .token.number,
+    .token.function {
+        color: var(--dk-code-number);
+    }
+
+    .token.property,
+    .token.class-name,
+    .token.constant,
+    .token.symbol {
+        color: var(--dk-code-property);
+    }
+
+    .token.selector,
+    .token.important,
+    .token.atrule,
+    .token.keyword,
+    .token.builtin {
+        color: var(--dk-code-keyword);
+    }
+
+    .token.string,
+    .token.char,
+    .token.attr-value,
+    .token.regex,
+    .token.variable {
+        color: var(--dk-code-string);
+    }
+
+    .token.operator,
+    .token.entity,
+    .token.url {
+        color: var(--dk-code-operator);
+    }
+
+    .token.inserted {
+        color: var(--dk-code-string);
+    }
+}

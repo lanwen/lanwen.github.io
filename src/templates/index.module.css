@@ -134,3 +134,36 @@
     height: 1.264rem;
     margin: 0 0 3px;
 }
+
+@media (prefers-color-scheme: dark) {
+    .postDetails {
+        color: var(--dk-muted);
+    }
+
+    .item {
+        color: var(--dk-heading);
+    }
+    .item:hover {
+        color: var(--dk-magenta-hover);
+        text-shadow: var(--dk-glow);
+    }
+
+    .blankItem:hover {
+        color: var(--dk-heading);
+        text-shadow: none;
+    }
+
+    .periodTitle {
+        border-left-color: var(--dk-line);
+        color: var(--dk-muted);
+    }
+
+    .periodContent {
+        border-left-color: var(--dk-line);
+    }
+
+    /* github mark in the "Code" item */
+    .social {
+        filter: var(--dk-icon-filter);
+    }
+}
