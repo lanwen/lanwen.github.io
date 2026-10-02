@@ -1,6 +1,7 @@
 ---
 import typography from "../utils/typography";
 import { site } from "../utils/site";
+import ThemeToggle from "../components/ThemeToggle.astro";
 
 import "../static/prismjs.css";
 import "../static/autolink-headers.css";
@@ -22,6 +23,17 @@ const fonts = "//fonts.googleapis.com/css?family=Varela+Round:400|Lora:400,400i,
         <meta charset="utf-8" />
         <meta http-equiv="x-ua-compatible" content="ie=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <script is:inline>
+            (() => {
+                let theme;
+                try {
+                    theme = localStorage.getItem("theme");
+                } catch {}
+                if (theme !== "light" && theme !== "dark")
+                    theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+                document.documentElement.dataset.theme = theme;
+            })();
+        </script>
         <style id="typography.js" is:inline set:html={typography.toString()} />
         <title>{title} | {site.title}</title>
         <meta name="description" content={description} />
@@ -40,6 +52,7 @@ const fonts = "//fonts.googleapis.com/css?family=Varela+Round:400|Lora:400,400i,
         <link href={fonts} rel="stylesheet" type="text/css" />
     </head>
     <body>
+        <ThemeToggle />
         <slot />
     </body>
 </html>

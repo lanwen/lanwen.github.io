@@ -1,0 +1,121 @@
+---
+---
+
+<button type="button" class="theme-toggle" aria-label="Switch to dark theme" title="Switch to dark theme">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path class="moon" d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+        <g class="sun">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+        </g>
+    </svg>
+</button>
+
+<style>
+    .theme-toggle {
+        /* out of flow, so no existing box moves; hidden until the head script
+           has set data-theme, since without JS it could not do anything */
+        display: none;
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        z-index: 1;
+        width: 2.25rem;
+        height: 2.25rem;
+        padding: 0;
+        place-items: center;
+        border: 0;
+        border-radius: 50%;
+        background: none;
+        color: light-dark(#2d2d2d, var(--dk-cyan));
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    :global(:root[data-theme]) .theme-toggle {
+        display: grid;
+    }
+
+    .theme-toggle:hover {
+        color: light-dark(#134896, var(--dk-cyan));
+        filter: drop-shadow(0 0 3px light-dark(transparent, var(--dk-glow-color)))
+            drop-shadow(0 0 8px light-dark(transparent, rgba(255, 43, 214, 0.45)));
+    }
+
+    .theme-toggle:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: 1px;
+    }
+
+    .theme-toggle:focus:not(:focus-visible) {
+        outline: none;
+    }
+
+    .sun {
+        display: none;
+    }
+
+    :global(:root[data-theme="dark"]) .moon {
+        display: none;
+    }
+
+    :global(:root[data-theme="dark"]) .sun {
+        display: inline;
+    }
+</style>
+
+<script>
+    type Theme = "light" | "dark";
+
+    const KEY = "theme";
+    const THEME_COLOR: Record<Theme, string> = { light: "#fff", dark: "#0d0221" };
+
+    const root = document.documentElement;
+    const button = document.querySelector<HTMLButtonElement>(".theme-toggle");
+    const metas = [...document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]')];
+    const autoColors = metas.map((meta) => meta.content);
+    const systemDark = matchMedia("(prefers-color-scheme: dark)");
+    const system = (): Theme => (systemDark.matches ? "dark" : "light");
+
+    const read = (): Theme | null => {
+        try {
+            const value = localStorage.getItem(KEY);
+            return value === "light" || value === "dark" ? value : null;
+        } catch {
+            return null;
+        }
+    };
+
+    // Kept in memory too, so the switch still works when storage throws.
+    let override = read();
+
+    const render = () => {
+        const theme = override ?? system();
+        const next: Theme = theme === "dark" ? "light" : "dark";
+        root.dataset.theme = theme;
+        metas.forEach((meta, i) => {
+            meta.content = override ? THEME_COLOR[override] : (autoColors[i] ?? meta.content);
+        });
+        button?.setAttribute("aria-label", `Switch to ${next} theme`);
+        button?.setAttribute("title", `Switch to ${next} theme`);
+    };
+
+    // Matching the system again means following it, so nothing is stored.
+    button?.addEventListener("click", () => {
+        const next: Theme = root.dataset.theme === "dark" ? "light" : "dark";
+        override = next === system() ? null : next;
+        try {
+            if (override) localStorage.setItem(KEY, override);
+            else localStorage.removeItem(KEY);
+        } catch {
+            // private mode: the choice lasts until reload
+        }
+        render();
+    });
+
+    systemDark.addEventListener("change", () => {
+        if (!override) render();
+    });
+
+    render();
+</script>
