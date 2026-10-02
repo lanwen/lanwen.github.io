@@ -4,5 +4,5 @@ Personal blog content
 To start dev
 
 ```
-npm run develop
+npm run dev
 ```

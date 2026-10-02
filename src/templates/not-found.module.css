@@ -1,0 +1,12 @@
+.code {
+    border-right: 2px solid;
+    font-size: 1.58rem;
+    padding: 0 0.79rem;
+    text-align: center;
+}
+
+.message {
+    font-size: 1.106rem;
+    text-align: center;
+    padding: 0 0.632rem;
+}

@@ -1,0 +1,136 @@
+:global(html),
+:global(body) {
+    height: 100%;
+}
+
+:global(.anchor) {
+    background-image: none;
+}
+
+.post {
+    display: flex;
+    margin-bottom: 0.632rem;
+}
+
+.postTitle {
+    padding-right: 2.37rem;
+    flex: 1;
+}
+
+.postDetails {
+    padding-right: 30px;
+    color: #666;
+}
+
+.indexLayout {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+.top {
+    flex: 1 0 33%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.item {
+    font-size: var(--x);
+    line-height: var(--x);
+    text-transform: uppercase;
+    margin-right: var(--offset);
+    background-image: none;
+    color: #2d2d2d;
+}
+.item:hover {
+    color: #134896;
+}
+
+.blankItem:hover {
+    color: #2d2d2d;
+}
+
+.bottom {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.timeline {
+    display: flex;
+    align-items: flex-start;
+    flex: 1;
+    flex-direction: column;
+    width: 100%;
+}
+
+.period {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+}
+
+.period:last-child {
+    flex: 1;
+}
+
+@media (min-width: 750px) {
+    .period {
+        flex-direction: row;
+    }
+}
+
+.periodTitle {
+    height: 100%;
+    display: flex;
+    padding-left: 10px;
+    padding-top: 10px;
+    border-left: 1px solid #2d2d2d;
+    justify-content: flex-start;
+    color: #666;
+    flex: 0;
+}
+
+@media (min-width: 750px) {
+    .periodTitle {
+        border-left: none;
+        justify-content: flex-end;
+        padding-right: 10px;
+        flex: 1 0 50%;
+    }
+}
+
+.periodContent {
+    flex: 1 0 50%;
+    flex-direction: column;
+    border-left: 1px solid #2d2d2d;
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 0.316rem;
+}
+
+.projectsSpacer {
+    flex: 0;
+}
+
+@media (min-width: 750px) {
+    .projectsSpacer {
+        flex: 1 0 50%;
+    }
+}
+
+.projectsLinks {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.social {
+    width: 1.264rem;
+    height: 1.264rem;
+    margin: 0 0 3px;
+}

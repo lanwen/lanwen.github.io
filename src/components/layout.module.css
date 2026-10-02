@@ -1,0 +1,63 @@
+:global(html),
+:global(body) {
+    height: 100%;
+}
+
+:global(.anchor) {
+    background-image: none;
+}
+
+.wrapper {
+    margin: 0 auto;
+    max-width: 1080px;
+    padding: 3.16rem;
+    padding-top: 2.37rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+.content {
+    flex: 1;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.79rem;
+    text-decoration: none;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.footer {
+    display: flex;
+    align-items: center;
+    margin-top: 3.16rem;
+    text-decoration: none;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.menu {
+    display: flex;
+}
+
+.contacts {
+    display: flex;
+    align-items: center;
+}
+.contacts a {
+    background-image: none;
+    color: #575757;
+}
+
+.footerLink {
+    padding-right: 2.37rem;
+}
+
+.social {
+    width: 0.79rem;
+    height: 0.79rem;
+    margin: 0;
+}

@@ -1,0 +1,21 @@
+---
+import Base from "../../../layouts/Base.astro";
+import Tag from "../../../templates/tag.jsx";
+import { getAllPosts, getPublishedPosts, inFileOrder } from "../../../utils/posts";
+
+export async function getStaticPaths() {
+    const tags = [...new Set((await getAllPosts()).flatMap((post) => post.fields.tags))];
+    const published = await getPublishedPosts();
+
+    return tags.map((tag) => ({
+        params: { tag },
+        props: { tag, posts: published.filter((post) => post.fields.tags.includes(tag)).sort(inFileOrder) },
+    }));
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<Base title={`Posts in tag "${tag}"`}>
+    <Tag tag={tag} posts={posts} />
+</Base>

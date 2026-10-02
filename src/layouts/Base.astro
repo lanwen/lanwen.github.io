@@ -1,0 +1,37 @@
+---
+import typography from "../utils/typography";
+import { site } from "../utils/site";
+
+import "../static/prismjs.css";
+import "../static/autolink-headers.css";
+
+const { title, description = site.description, keywords = [] } = Astro.props;
+const fonts = "//fonts.googleapis.com/css?family=Varela+Round:400|Lora:400,400i,700";
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <style id="typography.js" is:inline set:html={typography.toString()} />
+        <title>{title} | {site.title}</title>
+        <meta name="description" content={description} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        {keywords.length > 0 && <meta name="keywords" content={keywords.join(", ")} />}
+        <link rel="icon" href="/lanwen-icon.png" type="image/png" />
+        <link rel="manifest" href="/manifest.webmanifest" />
+        <meta name="theme-color" content="#fff" />
+        <link rel="apple-touch-icon" sizes="512x512" href="/lanwen-icon.png" />
+        <link href={fonts} rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+        <slot />
+    </body>
+</html>

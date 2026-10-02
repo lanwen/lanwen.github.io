@@ -1,0 +1,17 @@
+---
+import Base from "../../layouts/Base.astro";
+import Post from "../../templates/post.jsx";
+import { getAllPosts } from "../../utils/posts";
+
+export async function getStaticPaths() {
+    const posts = await getAllPosts();
+
+    return posts.map((post) => ({ params: { slug: post.name }, props: { post } }));
+}
+
+const { post } = Astro.props;
+---
+
+<Base title={post.frontmatter.title} description={post.excerpt} keywords={post.frontmatter.tags}>
+    <Post post={post} />
+</Base>
