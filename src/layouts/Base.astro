@@ -6,6 +6,12 @@ import "../static/prismjs.css";
 import "../static/autolink-headers.css";
 import "../static/theme-dark.css";
 
+interface Props {
+    title: string;
+    description?: string;
+    keywords?: string[];
+}
+
 const { title, description = site.description, keywords = [] } = Astro.props;
 const fonts = "//fonts.googleapis.com/css?family=Varela+Round:400|Lora:400,400i,700";
 ---

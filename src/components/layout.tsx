@@ -1,13 +1,19 @@
-import React from "react";
+import type { ReactNode } from "react";
+
+import { site as conf } from "../utils/site";
 
 import gh from "../images/github.svg";
 import lin from "../images/linkedin.svg";
 
-import styles from "./empty.module.css";
+import styles from "./layout.module.css";
 
-const EmptyLayout = ({ children }) => {
+const Layout = ({ children }: { children?: ReactNode }) => {
     return (
         <div className={styles.wrapper}>
+            <div className={styles.header}>
+                <a href={`/`}>{conf.title}</a>
+            </div>
+
             <div className={styles.content}>{children}</div>
 
             <div className={styles.footer}>
@@ -41,4 +47,4 @@ const EmptyLayout = ({ children }) => {
     );
 };
 
-export default EmptyLayout;
+export default Layout;

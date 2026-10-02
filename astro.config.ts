@@ -8,7 +8,7 @@ import {
     highlightWrapper,
     inlineCode,
     looseLists,
-} from "./src/utils/markdown-plugins.js";
+} from "./src/utils/markdown-plugins";
 
 export default defineConfig({
     site: "https://lanwen.dev",

@@ -1,29 +1,38 @@
-import React from "react";
+import type { ComponentProps, CSSProperties } from "react";
 
 import { rhythm } from "../utils/typography";
+import type { Post } from "../utils/posts";
 
 import gh from "../images/github.svg";
 
 import styles from "./index.module.css";
 
-const cx = (...names) => names.filter(Boolean).join(" ");
+const cx = (...names: (string | false | null | undefined)[]) => names.filter(Boolean).join(" ");
 
-const Item = ({ x, offset, className, style, ...props }) => (
-    <a
-        {...props}
-        className={cx(styles.item, className)}
-        style={{
-            "--x": rhythm(x || 1),
-            "--offset": rhythm(offset || 0),
-            ...style,
-        }}
-    />
-);
+type CustomProperties = CSSProperties & Record<`--${string}`, string>;
 
-const BlankItem = (props) => <Item {...props} className={styles.blankItem} />;
+type ItemProps = ComponentProps<"a"> & { x?: number; offset?: number };
 
-const IndexPage = ({ data }) => {
-    const byMonth = data.markdown.posts.reduce((monthly, post) => {
+const Item = ({ x, offset, className, style, ...props }: ItemProps) => {
+    const customStyle: CustomProperties = {
+        "--x": rhythm(x || 1),
+        "--offset": rhythm(offset || 0),
+        ...style,
+    };
+
+    return (
+        <a
+            {...props}
+            className={cx(styles.item, className)}
+            style={customStyle}
+        />
+    );
+};
+
+const BlankItem = (props: ItemProps) => <Item {...props} className={styles.blankItem} />;
+
+const IndexPage = ({ data }: { data: { markdown: { posts: Post[] } } }) => {
+    const byMonth = data.markdown.posts.reduce<Record<string, Post[]>>((monthly, post) => {
         const month = post.fields.month;
         const posts = [...monthly[month] || [], post];
 
