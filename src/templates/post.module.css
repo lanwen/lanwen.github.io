@@ -1,5 +1,5 @@
 .date {
-    color: #ccc;
+    color: light-dark(#ccc, var(--dk-cyan));
     font-size: 0.79rem;
     padding: 0.79rem 0;
 }
@@ -25,10 +25,4 @@
 
 h1:hover .anchor {
     visibility: visible;
-}
-
-@media (prefers-color-scheme: dark) {
-    .date {
-        color: var(--dk-cyan);
-    }
 }

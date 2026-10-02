@@ -8,7 +8,7 @@
 
 code[class*="language-"],
 pre[class*="language-"] {
-    color: #ccc;
+    color: light-dark(#ccc, var(--dk-code-text));
     background: none;
     font-family: "Fira Code", Consolas, Menlo, Monaco, "Andale Mono WT", "Andale Mono",
     "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono",
@@ -40,7 +40,8 @@ pre[class*="language-"] {
 }
 
 pre[class*="language-"] {
-    background: #2d2d2d;
+    background: light-dark(#2d2d2d, var(--dk-surface));
+    box-shadow: var(--code-ring);
 }
 
 /* Inline code */
@@ -52,8 +53,8 @@ pre[class*="language-"] {
 
 /* Inline code */
 :not(pre) > code[class*="language-"] {
-    background: #0000000a;
-    color: #000000ba;
+    background: light-dark(#0000000a, var(--dk-code-inline-bg));
+    color: light-dark(#000000ba, var(--dk-code-inline-text));
 }
 
 .token.comment,
@@ -61,35 +62,35 @@ pre[class*="language-"] {
 .token.prolog,
 .token.doctype,
 .token.cdata {
-    color: #999;
+    color: light-dark(#999, var(--dk-code-comment));
 }
 
 .token.punctuation {
-    color: #ccc;
+    color: light-dark(#ccc, var(--dk-code-punct));
 }
 
 .token.tag,
 .token.attr-name,
 .token.namespace,
 .token.deleted {
-    color: #e2777a;
+    color: light-dark(#e2777a, var(--dk-code-tag));
 }
 
 .token.function-name {
-    color: #6196cc;
+    color: light-dark(#6196cc, var(--dk-code-function-name));
 }
 
 .token.boolean,
 .token.number,
 .token.function {
-    color: #f08d49;
+    color: light-dark(#f08d49, var(--dk-code-number));
 }
 
 .token.property,
 .token.class-name,
 .token.constant,
 .token.symbol {
-    color: #f8c555;
+    color: light-dark(#f8c555, var(--dk-code-property));
 }
 
 .token.selector,
@@ -97,7 +98,7 @@ pre[class*="language-"] {
 .token.atrule,
 .token.keyword,
 .token.builtin {
-    color: #cc99cd;
+    color: light-dark(#cc99cd, var(--dk-code-keyword));
 }
 
 .token.string,
@@ -105,13 +106,13 @@ pre[class*="language-"] {
 .token.attr-value,
 .token.regex,
 .token.variable {
-    color: #7ec699;
+    color: light-dark(#7ec699, var(--dk-code-string));
 }
 
 .token.operator,
 .token.entity,
 .token.url {
-    color: #67cdcc;
+    color: light-dark(#67cdcc, var(--dk-code-operator));
 }
 
 .token.important,
@@ -127,5 +128,5 @@ pre[class*="language-"] {
 }
 
 .token.inserted {
-    color: green;
+    color: light-dark(green, var(--dk-code-string));
 }

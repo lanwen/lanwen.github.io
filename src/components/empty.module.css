@@ -42,7 +42,7 @@
 }
 .contacts a {
     background-image: none;
-    color: #575757;
+    color: light-dark(#575757, var(--dk-muted));
 }
 
 .footerLink {
@@ -53,14 +53,5 @@
     width: 0.79rem;
     height: 0.79rem;
     margin: 0;
-}
-
-@media (prefers-color-scheme: dark) {
-    .contacts a {
-        color: var(--dk-muted);
-    }
-
-    .social {
-        filter: var(--dk-icon-filter);
-    }
+    filter: var(--icon-filter);
 }
