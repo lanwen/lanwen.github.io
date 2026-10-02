@@ -1,7 +1,12 @@
 import Typography from "typography";
 import theme from "typography-theme-lincoln";
 
-const unwrap = (mod) => (mod && mod.default) || mod;
+const hasDefault = <T extends object>(
+    mod: T | { default: T }
+): mod is { default: T } => "default" in mod && Boolean(mod.default);
+
+const unwrap = <T extends object>(mod: T | { default: T }): T =>
+    hasDefault(mod) ? mod.default : mod;
 
 const typography = new (unwrap(Typography))(unwrap(theme));
 

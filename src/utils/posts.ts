@@ -1,22 +1,22 @@
-import { getCollection } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
 import sanitizeHtml from "sanitize-html";
 import slugify from "slug";
 import words from "lodash/words.js";
 
 const MONTHS = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(" ");
 
-export const formatDay = (date) => date.toISOString().slice(0, 10);
-export const formatMonth = (date) =>
+export const formatDay = (date: Date) => date.toISOString().slice(0, 10);
+export const formatMonth = (date: Date) =>
     `${date.getUTCFullYear()} ${MONTHS[date.getUTCMonth()]}`;
 
-export function partsOf(id) {
+export function partsOf(id: string) {
     const [dir, file] = id.split("/");
     return (file ? dir : id).split("_");
 }
 
-export const tagSlug = (tag) => slugify(tag, { lower: true });
+export const tagSlug = (tag: string) => slugify(tag, { lower: true });
 
-const ENTITIES = {
+const ENTITIES: Record<string, string> = {
     amp: "&",
     lt: "<",
     gt: ">",
@@ -24,10 +24,15 @@ const ENTITIES = {
     apos: "'",
     nbsp: "\u00a0",
 };
-const decode = (text) =>
+const decode = (text: string) =>
     text.replace(
         /&(?:#x([0-9a-f]+)|#(\d+)|(\w+));/gi,
-        (match, hex, dec, name) =>
+        (
+            match: string,
+            hex: string | undefined,
+            dec: string | undefined,
+            name: string
+        ) =>
             hex
                 ? String.fromCodePoint(parseInt(hex, 16))
                 : dec
@@ -43,17 +48,17 @@ const COUNTED_HTML = {
     allowedAttributes: { a: ["href", "name", "target"], img: ["src"] },
 };
 
-function timeToRead(html) {
+function timeToRead(html: string) {
     const wordCount = words(sanitizeHtml(html, COUNTED_HTML)).length;
     return Math.max(1, Math.round(wordCount / 265));
 }
 
-function prune(str, length, pruneStr) {
+function prune(str: string, length: number, pruneStr: string) {
     if (str.length <= length) return str;
 
     let template = str
         .slice(0, length + 1)
-        .replace(/.(?=\W*\w*$)/g, (c) =>
+        .replace(/.(?=\W*\w*$)/g, (c: string) =>
             c.toUpperCase() !== c.toLowerCase() ? "A" : " "
         );
 
@@ -68,7 +73,7 @@ function prune(str, length, pruneStr) {
         : str.slice(0, template.length) + pruneStr;
 }
 
-function excerpt(html) {
+function excerpt(html: string) {
     const text = html
         .replace(/<pre[\s\S]*?<\/pre>/g, "")
         .replace(/<code[^>]*>[\s\S]*?<\/code>/g, "")
@@ -79,7 +84,26 @@ function excerpt(html) {
     return prune(decode(text).trim(), 140, "…");
 }
 
-function toPost(entry) {
+export type Post = {
+    html: string;
+    excerpt: string;
+    timeToRead: number;
+    frontmatter: CollectionEntry<"posts">["data"];
+    fields: {
+        slug: string;
+        published: string;
+        month: string;
+        tags: string[];
+    };
+};
+
+export type PostEntry = Post & {
+    name: string;
+    id: string;
+    publishedAt: Date;
+};
+
+function toPost(entry: CollectionEntry<"posts">): PostEntry {
     const [date, name] = partsOf(entry.id);
     const published = new Date(date);
     const html = entry.rendered?.html ?? "";
@@ -101,11 +125,12 @@ function toPost(entry) {
     };
 }
 
-const newestFirst = (a, b) =>
-    b.publishedAt - a.publishedAt || (a.id < b.id ? -1 : 1);
+const newestFirst = (a: PostEntry, b: PostEntry) =>
+    b.publishedAt.getTime() - a.publishedAt.getTime() || (a.id < b.id ? -1 : 1);
 
-export const inFileOrder = (a, b) =>
-    a.id.includes("/") - b.id.includes("/") || (a.id < b.id ? -1 : 1);
+export const inFileOrder = (a: PostEntry, b: PostEntry) =>
+    Number(a.id.includes("/")) - Number(b.id.includes("/")) ||
+    (a.id < b.id ? -1 : 1);
 
 export async function getAllPosts() {
     return (await getCollection("posts")).map(toPost).sort(newestFirst);

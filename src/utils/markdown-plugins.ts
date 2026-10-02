@@ -34,7 +34,12 @@ export const looseLists = defineMdastPlugin({
     },
     code(node, ctx) {
         const parent = ctx.parent(node);
-        if (parent.type !== "listItem" || parent.children.length < 2) return;
+        if (
+            parent.type !== "listItem" ||
+            parent.children.length < 2 ||
+            !node.position
+        )
+            return;
 
         const indent = " ".repeat(node.position.start.column - 1);
         const value = node.value
@@ -52,7 +57,8 @@ export const inlineCode = defineHastPlugin({
     element: {
         filter: ["code"],
         visit(node, ctx) {
-            if (ctx.parent(node).tagName !== "pre") {
+            const parent = ctx.parent(node);
+            if (parent.type !== "element" || parent.tagName !== "pre") {
                 ctx.setProperty(node, "className", ["language-text"]);
             }
         },
