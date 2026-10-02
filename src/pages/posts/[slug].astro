@@ -3,7 +3,6 @@ import Base from "../../layouts/Base.astro";
 import Post from "../../templates/post.jsx";
 import { getAllPosts } from "../../utils/posts";
 
-// Drafts get a page too, they are only left out of the lists
 export async function getStaticPaths() {
     const posts = await getAllPosts();
 

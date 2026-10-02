@@ -3,8 +3,6 @@ import Base from "../../../layouts/Base.astro";
 import Tag from "../../../templates/tag.jsx";
 import { getAllPosts, getPublishedPosts, inFileOrder } from "../../../utils/posts";
 
-// A page for every tag of every post, drafts included, but only published
-// posts are listed.
 export async function getStaticPaths() {
     const tags = [...new Set((await getAllPosts()).flatMap((post) => post.fields.tags))];
     const published = await getPublishedPosts();

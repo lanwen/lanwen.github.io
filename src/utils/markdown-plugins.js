@@ -1,14 +1,6 @@
-// Sätteri plugins that bring the Markdown output back to what
-// gatsby-transformer-remark produced with gatsby-remark-autolink-headers and
-// gatsby-remark-prismjs. Syntax highlighting itself is Astro's built-in Prism
-// (`markdown.syntaxHighlight: "prism"`), styled by src/static/prismjs.css.
 import GithubSlugger from "github-slugger";
 import { defineHastPlugin, defineMdastPlugin } from "satteri";
 
-// The old remark dropped blank lines at the start of a fenced block, and
-// gatsby-remark-prismjs read "shell script" as the language `shellscript` (no
-// grammar, so the block is left unhighlighted). Sätteri keeps the blank line
-// and would take `shell` and highlight it as bash.
 export const fencedCode = defineMdastPlugin({
     name: "fenced-code",
     code(node, ctx) {
@@ -29,10 +21,6 @@ export const fencedCode = defineMdastPlugin({
     },
 });
 
-// Lists in the old remark: an item with more than one block in it (a
-// paragraph and a code block, say) was a loose item, so its text kept its <p>,
-// and the whole list was loose along with it. The code block of such an item
-// also lost the indentation of the fence once more.
 export const looseLists = defineMdastPlugin({
     name: "loose-lists",
     options: { position: true },
@@ -59,8 +47,6 @@ export const looseLists = defineMdastPlugin({
     },
 });
 
-// gatsby-remark-prismjs marked inline code as `language-text`, and
-// prismjs.css styles `:not(pre) > code[class*="language-"]`.
 export const inlineCode = defineHastPlugin({
     name: "inline-code",
     element: {
@@ -73,10 +59,6 @@ export const inlineCode = defineHastPlugin({
     },
 });
 
-// gatsby-remark-prismjs wrapped every highlighted block in
-// <div class="gatsby-highlight" data-language="...">, with the language on
-// the wrapper instead of on the <pre>. No stylesheet here uses the wrapper,
-// but it is kept so the markup stays the same.
 export const highlightWrapper = defineHastPlugin({
     name: "highlight-wrapper",
     element: {
@@ -96,16 +78,11 @@ export const highlightWrapper = defineHastPlugin({
     },
 });
 
-// The icon is the octicon link that gatsby-remark-autolink-headers inlines.
-// Its CSS is in src/static/autolink-headers.css.
 const linkIcon =
     '<svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16">' +
     '<path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>' +
     "</svg>";
 
-// A factory, so every document gets its own slugger and duplicate headings
-// are numbered per post. Astro keeps ids that are already set, so these are
-// the ids used for the page too.
 export const autolinkHeaders = () => {
     const slugger = new GithubSlugger();
 

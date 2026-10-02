@@ -10,9 +10,7 @@ import {
     looseLists,
 } from "./src/utils/markdown-plugins.js";
 
-// https://astro.build/config
 export default defineConfig({
-    // matches CNAME
     site: "https://lanwen.dev",
     integrations: [react()],
     markdown: {
@@ -20,7 +18,6 @@ export default defineConfig({
         processor: satteri({
             mdastPlugins: [fencedCode, looseLists],
             hastPlugins: [inlineCode, highlightWrapper, autolinkHeaders],
-            // remark in gatsby-transformer-remark did not do smart punctuation
             features: { smartPunctuation: false },
         }),
     },

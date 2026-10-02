@@ -8,8 +8,6 @@ import styles from "./index.module.css";
 
 const cx = (...names) => names.filter(Boolean).join(" ");
 
-// Was `styled.a` with x/offset props: the props are now inline custom
-// properties, read by .item in index.module.css
 const Item = ({ x, offset, className, style, ...props }) => (
     <a
         {...props}
