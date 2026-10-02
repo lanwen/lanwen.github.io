@@ -3,16 +3,11 @@
     font-size: 1.58rem;
     padding: 0 0.79rem;
     text-align: center;
+    color: light-dark(hsla(0, 0%, 0%, 0.73), var(--dk-cyan));
 }
 
 .message {
     font-size: 1.106rem;
     text-align: center;
     padding: 0 0.632rem;
-}
-
-@media (prefers-color-scheme: dark) {
-    .code {
-        color: var(--dk-cyan);
-    }
 }

@@ -1,0 +1,191 @@
+/*
+ * Colour themes: the default light look and a dark "neon magenta cyberpunk".
+ *
+ * Every themed colour is written once as light-dark(<light>, <dark>). Which
+ * side wins is decided by `color-scheme` on <html>: it follows the OS by
+ * default, so the site works without JS, and the theme switch only pins it
+ * through <html data-theme="light|dark"> (see layouts/Base.astro). Only colours
+ * change between themes, never layout, fonts, sizes or spacing.
+ *
+ * The dark palette below is plain constants. Components keep their light value
+ * next to the rule that uses it and take the dark side from here:
+ *   color: light-dark(#666, var(--dk-muted));
+ *
+ * This file is imported by layouts/Base.astro after the Lincoln typography
+ * <style> (an inline string in <head>), so the plain element selectors below
+ * win over it by source order at equal specificity. The light values in those
+ * rules are Lincoln's own.
+ */
+:root {
+    color-scheme: light dark;
+
+    /* surfaces */
+    --dk-bg: #0d0221; /* page background, near-black violet */
+    --dk-surface: #1a0b3d; /* code blocks */
+
+    /* text */
+    --dk-text: #e6e1f5; /* body text, soft lavender */
+    --dk-heading: #f6f2ff; /* headings, a bit brighter */
+    --dk-muted: #a99dcc; /* secondary text: dates, "min to read", comments */
+
+    /* accents */
+    --dk-magenta: #ff2bd6; /* primary: links, underline, blockquote bar */
+    --dk-magenta-hover: #ff7ae6; /* link hover */
+    --dk-cyan: #00f0ff; /* secondary: dates, anchor icon, 404, icons */
+    --dk-line: rgba(0, 240, 255, 0.4); /* timeline borders */
+    --dk-line-soft: rgba(0, 240, 255, 0.22); /* hr, table rules */
+    --dk-glow-color: rgba(255, 43, 214, 0.75);
+
+    /* turns the black-on-transparent svg icons (used as <img>) into
+       roughly --dk-cyan: black -> #04f0ff */
+    --dk-icon-filter: invert(77%) sepia(90%) saturate(2951%) hue-rotate(133deg) brightness(100%)
+        contrast(103%);
+
+    --dk-code-ring: inset 0 0 0 1px rgba(255, 43, 214, 0.28);
+
+    /* Prism (code) */
+    --dk-code-text: #e6e1f5;
+    --dk-code-comment: #a99dcc;
+    --dk-code-punct: #c9bde8;
+    --dk-code-tag: #ff5c9d; /* tag, attr-name, deleted */
+    --dk-code-function-name: #00f0ff;
+    --dk-code-number: #ff9e3d; /* boolean, number, function */
+    --dk-code-property: #fff35c; /* property, class-name, constant, symbol */
+    --dk-code-keyword: #ff2bd6; /* selector, atrule, keyword, builtin */
+    --dk-code-string: #4dff9a; /* string, char, attr-value, regex, variable */
+    --dk-code-operator: #7aeaf5; /* operator, entity, url */
+    --dk-code-inline-bg: rgba(0, 240, 255, 0.1);
+    --dk-code-inline-text: #8ff7ff;
+
+    /* themed colours shared by several rules */
+    --page-bg: light-dark(#fff, var(--dk-bg));
+    --dark-page-bg: light-dark(transparent, var(--dk-bg));
+    --link: light-dark(#134896, var(--dk-magenta));
+
+    /* the page-colour halo Lincoln draws around link text so the underline
+       skips descenders; it must match the background. The y offsets at 0.06em
+       and 0.09em are only drawn in dark. */
+    --knockout:
+        0.03em 0 var(--page-bg), -0.03em 0 var(--page-bg), 0 0.03em var(--page-bg),
+        0 -0.03em var(--page-bg), 0.06em 0 var(--page-bg), -0.06em 0 var(--page-bg),
+        0 0.06em var(--dark-page-bg), 0 -0.06em var(--dark-page-bg), 0.09em 0 var(--page-bg),
+        -0.09em 0 var(--page-bg), 0 0.09em var(--dark-page-bg), 0 -0.09em var(--dark-page-bg),
+        0.12em 0 var(--page-bg), -0.12em 0 var(--page-bg), 0.15em 0 var(--page-bg),
+        -0.15em 0 var(--page-bg);
+
+    /* glow, text-shadow only, never a layout box */
+    --glow:
+        0 0 6px light-dark(transparent, var(--dk-glow-color)),
+        0 0 16px light-dark(transparent, rgba(255, 43, 214, 0.4));
+
+    /* not colours, so they are switched with the theme below. Even a
+       transparent box-shadow on <pre> changes how its text is anti-aliased. */
+    --icon-filter: none;
+    --code-ring: none;
+}
+
+:root[data-theme="light"] {
+    color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --icon-filter: var(--dk-icon-filter);
+    --code-ring: var(--dk-code-ring);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --icon-filter: var(--dk-icon-filter);
+        --code-ring: var(--dk-code-ring);
+    }
+}
+
+/* transparent in light: the canvas is already white, and an opaque root
+   background changes how text is anti-aliased */
+html {
+    background: light-dark(transparent, var(--dk-bg));
+}
+
+::selection {
+    background: light-dark(Highlight, rgba(255, 43, 214, 0.45));
+    color: light-dark(HighlightText, #fff);
+}
+
+/* Lincoln globals */
+body {
+    color: light-dark(hsla(0, 0%, 0%, 0.73), var(--dk-text));
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: light-dark(hsla(0, 0%, 0%, 0.9), var(--dk-heading));
+}
+
+a {
+    color: var(--link);
+    text-shadow: var(--knockout);
+    background-image: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0),
+        rgba(0, 0, 0, 0) 1px,
+        var(--link) 1px,
+        var(--link) 2px,
+        rgba(0, 0, 0, 0) 2px
+    );
+}
+
+a:hover,
+a:active {
+    color: light-dark(#134896, var(--dk-magenta-hover));
+    text-shadow: var(--glow);
+}
+
+blockquote {
+    border-left-color: var(--link);
+    color: light-dark(hsla(0, 0%, 0%, 0.65), var(--dk-muted));
+    background-image: linear-gradient(
+        to right,
+        light-dark(transparent, rgba(255, 43, 214, 0.12)),
+        rgba(255, 43, 214, 0)
+    );
+}
+
+@media only screen and (max-width: 480px) {
+    blockquote {
+        color: light-dark(hsla(0, 0%, 0%, 0.59), var(--dk-muted));
+    }
+}
+
+blockquote cite {
+    color: light-dark(hsla(0, 0%, 0%, 0.73), var(--dk-text));
+}
+
+hr {
+    background: light-dark(hsla(0, 0%, 0%, 0.2), var(--dk-line-soft));
+}
+
+td,
+th {
+    border-bottom-color: light-dark(hsla(0, 0%, 0%, 0.12), var(--dk-line-soft));
+}
+
+abbr,
+acronym,
+abbr[title] {
+    border-bottom-color: light-dark(hsla(0, 0%, 0%, 0.5), var(--dk-muted));
+}
+
+/* the permalink icon is a black-filled svg path */
+h1 .anchor svg,
+h2 .anchor svg,
+h3 .anchor svg,
+h4 .anchor svg,
+h5 .anchor svg,
+h6 .anchor svg {
+    fill: light-dark(#000, var(--dk-cyan));
+}

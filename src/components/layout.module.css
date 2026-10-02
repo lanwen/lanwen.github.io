@@ -49,32 +49,23 @@
 }
 .contacts a {
     background-image: none;
-    color: #575757;
+    color: light-dark(#575757, var(--dk-muted));
 }
 
 .footerLink {
     padding-right: 2.37rem;
 }
 
+/* the icons are black-on-transparent svg in <img>; in dark the filter
+   recolours them to the cyan accent (no layout effect) */
 .social {
     width: 0.79rem;
     height: 0.79rem;
     margin: 0;
+    filter: var(--icon-filter);
 }
 
-@media (prefers-color-scheme: dark) {
-    /* site title: faint neon halo, text-shadow only */
-    .header a {
-        text-shadow: var(--dk-knockout), 0 0 10px rgba(255, 43, 214, 0.55);
-    }
-
-    .contacts a {
-        color: var(--dk-muted);
-    }
-
-    /* the icons are black-on-transparent svg in <img>, so recolour them
-       to the cyan accent with a filter (no layout effect) */
-    .social {
-        filter: var(--dk-icon-filter);
-    }
+/* site title: faint neon halo in dark, text-shadow only */
+.header a {
+    text-shadow: var(--knockout), 0 0 10px light-dark(transparent, rgba(255, 43, 214, 0.55));
 }
