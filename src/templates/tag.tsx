@@ -1,8 +1,7 @@
-import React from "react"
-
 import Layout from "../components/layout"
+import type { Post } from "../utils/posts"
 
-const CategoryTemplate = ({ tag, posts }) => {
+const CategoryTemplate = ({ tag, posts }: { tag: string; posts: Post[] }) => {
     return (
         <Layout>
             <div>

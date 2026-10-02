@@ -1,11 +1,11 @@
-import React from "react";
+import type { ReactNode } from "react";
 
 import gh from "../images/github.svg";
 import lin from "../images/linkedin.svg";
 
 import styles from "./empty.module.css";
 
-const EmptyLayout = ({ children }) => {
+const EmptyLayout = ({ children }: { children?: ReactNode }) => {
     return (
         <div className={styles.wrapper}>
             <div className={styles.content}>{children}</div>

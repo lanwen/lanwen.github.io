@@ -1,9 +1,9 @@
-import React from "react";
 import Layout from "../components/layout";
+import type { Post } from "../utils/posts";
 
 import styles from "./post.module.css";
 
-export default ({ post }) => {
+export default ({ post }: { post: Post }) => {
     return (
         <Layout>
             <h1>

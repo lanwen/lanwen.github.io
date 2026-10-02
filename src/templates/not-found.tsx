@@ -1,5 +1,3 @@
-import React from "react";
-
 import EmptyLayout from "../components/empty";
 
 import styles from "./not-found.module.css";

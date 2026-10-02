@@ -1,4 +1,4 @@
-import React from "react";
+import type { ReactNode } from "react";
 
 import { site as conf } from "../utils/site";
 
@@ -7,7 +7,7 @@ import lin from "../images/linkedin.svg";
 
 import styles from "./layout.module.css";
 
-const Layout = ({ children }) => {
+const Layout = ({ children }: { children?: ReactNode }) => {
     return (
         <div className={styles.wrapper}>
             <div className={styles.header}>

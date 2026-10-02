@@ -1,13 +1,16 @@
 ---
+import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
 import Base from "../../layouts/Base.astro";
 import Post from "../../templates/post.tsx";
 import { getAllPosts } from "../../utils/posts";
 
-export async function getStaticPaths() {
+export const getStaticPaths = (async () => {
     const posts = await getAllPosts();
 
     return posts.map((post) => ({ params: { slug: post.name }, props: { post } }));
-}
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
 const { post } = Astro.props;
 ---
