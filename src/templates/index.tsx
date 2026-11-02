@@ -50,9 +50,22 @@ const IndexPage = ({ data }: { data: { markdown: { posts: Post[] } } }) => {
                 <div className={styles.period}>
                     <div className={styles.projectsSpacer} />
                     <div className={cx(styles.periodContent, styles.projectsLinks)}>
-                        <a href={"https://coil3d.lanwen.dev"} target={"_blank"}>coil3d.lanwen.dev</a>
-                        <a href={"https://lanwen.github.io/frmtr/"} target={"_blank"}>lanwen.github.io/frmtr</a>
-                        <a href={"https://cloud.orcaslicer.com/p/3de073fe445a"} target={"_blank"}>OrcaSlicer Snapmaker U1 Tab plugin</a>
+                        <div className={styles.project}>
+                            <a href={"https://coil3d.lanwen.dev"} target={"_blank"}>coil3d.lanwen.dev</a>
+                            <small className={styles.projectDescription}>Print custom coils for your wires.</small>
+                        </div>
+                        <div className={styles.project}>
+                            <a href={"https://lanwen.github.io/frmtr/"} target={"_blank"}>lanwen.github.io/frmtr</a>
+                            <small className={styles.projectDescription}>Format Java code with a preset style.</small>
+                        </div>
+                        <div className={styles.project}>
+                            <a href={"https://cloud.orcaslicer.com/p/3de073fe445a"} target={"_blank"}>OrcaSlicer Snapmaker U1 Tab plugin</a>
+                            <small className={styles.projectDescription}>View your Snapmaker U1 camera and status.</small>
+                        </div>
+                        <div className={styles.project}>
+                            <a href={"https://github.com/lanwen/herdr-sbx"} target={"_blank"}>github.com/lanwen/herdr-sbx</a>
+                            <small className={styles.projectDescription}>Use Docker sandboxes as remote machines in Herdr.</small>
+                        </div>
                     </div>
                 </div>
                 <Item x={1.3} offset={-1} href={"https://github.com/lanwen"} target={"_blank"}><img className={styles.social} src={gh.src} alt={"Github"} /> Code</Item>
