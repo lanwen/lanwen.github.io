@@ -76,10 +76,6 @@
     flex-direction: column;
 }
 
-.top > .period {
-    margin-bottom: 0.75rem;
-}
-
 .period:last-child {
     flex: 1;
 }
@@ -134,6 +130,7 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
+    padding-bottom: 1rem;
 }
 
 .project {
