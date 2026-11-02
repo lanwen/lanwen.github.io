@@ -52,6 +52,7 @@ const IndexPage = ({ data }: { data: { markdown: { posts: Post[] } } }) => {
                     <div className={cx(styles.periodContent, styles.projectsLinks)}>
                         <a href={"https://coil3d.lanwen.dev"} target={"_blank"}>coil3d.lanwen.dev</a>
                         <a href={"https://lanwen.github.io/frmtr/"} target={"_blank"}>lanwen.github.io/frmtr</a>
+                        <a href={"https://cloud.orcaslicer.com/p/3de073fe445a"} target={"_blank"}>OrcaSlicer Snapmaker U1 Tab plugin</a>
                     </div>
                 </div>
                 <Item x={1.3} offset={-1} href={"https://github.com/lanwen"} target={"_blank"}><img className={styles.social} src={gh.src} alt={"Github"} /> Code</Item>
