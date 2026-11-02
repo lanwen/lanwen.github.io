@@ -76,6 +76,10 @@
     flex-direction: column;
 }
 
+.top > .period {
+    margin-bottom: 0.75rem;
+}
+
 .period:last-child {
     flex: 1;
 }
